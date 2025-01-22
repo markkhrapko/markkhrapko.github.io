@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         "detect_on": "window",
         "events": {
           "onhover": { "enable": true, "mode": "grab" },
-          "onclick": { "enable": true, "mode": "push" },
+          "onclick": { "enable": true, "mode": "push" }, // still enabled for general clicks
           "resize": true
         },
         "modes": {
@@ -89,11 +89,14 @@ document.addEventListener('DOMContentLoaded', function() {
       track.style.transform = `translateX(${offsetPercent}%)`;
     }
   
-    // Next/Prev buttons
-    nextButton.addEventListener('click', () => {
+    // Next/Prev button events
+    nextButton.addEventListener('click', (e) => {
+      // Stop click from bubbling up to Particles.js
+      e.stopPropagation();
       goToSlide(currentIndex + 1);
     });
-    prevButton.addEventListener('click', () => {
+    prevButton.addEventListener('click', (e) => {
+      e.stopPropagation();
       goToSlide(currentIndex - 1);
     });
   
