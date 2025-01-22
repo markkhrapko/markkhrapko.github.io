@@ -1,87 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mark Khrapko</title>
-    <!-- <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"> -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mark Khrapko</title>
+
+  <!-- Montserrat font (like Eva’s site) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" 
+    rel="stylesheet"
+  />
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Particles.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
 </head>
-
 <body>
-    <div id="particles-js"></div>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <span><strong>Mark Khrapko</strong></span>
+
+  <!-- Particles background (behind everything) -->
+  <div id="particles-js"></div>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <div class="logo">
+        <span><strong>Mark Khrapko</strong></span>
+      </div>
+      <nav>
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/mark-khrapko/" target="_blank" aria-label="LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7
+                     a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v
+                     -7 a6 6 0 0 1 6-6z"></path>
+            <rect x="2" y="9" width="4" height="12"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </a>
+
+        <!-- Email -->
+        <a href="mailto:mark@orbit.engineering" aria-label="Email">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 
+                     2 2v12c0 1.1-.9 2-2 2H4
+                     c-1.1 0-2-.9-2-2V6
+                     c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </a>
+      </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      <p>Building the future of neurotech @ Orbit</p>
+
+      <div class="divider"></div>
+    
+      <!-- Collapsible #1: Previously -->
+      <section class="collapsible">
+        <h2 class="section-title">
+          <strong>Previously</strong>
+          <span class="caret">^</span>
+        </h2>
+        <div class="section-content">
+          
+          <p>Explored bacterial fitness landscapes & enzyme interactions</p>
+          <p>Studied virus-antibody binding data with metadynamics</p>
+          <p>Developed models for mtDNA and germline mutations</p>
+          
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- Collapsible #2: Now -->
+      <section class="collapsible">
+        <h2 class="section-title">
+          <strong>Now - Neurotech!</strong>
+          <span class="caret">^</span>
+        </h2>
+        <div class="section-content">
+          <p>Designing state of the art electrodes</p>
+          <p>Mastering vestibular stimulation</p>
+          <p>Building a future without neurodegenerative disease</p>
+          <p>And creating amazing <em>secret</em> tech along the way</p>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- CAROUSEL SECTION (with hover overlay) -->
+      <section class="carousel-section">
+        <h2 class="section-title">
+          <strong>So Far:</strong>
+          <span class="caret"></span>
+        </h2>
+
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <!-- 20 slides total: replace with real images as desired -->
+            <div class="slide">
+              <img src="images/IMG_9599.jpeg" alt="Slide 5"/>
+              <div class="description">Early VR rollercoaster demos</div>
             </div>
-            <nav>
-                <!-- <a href="#">Writing</a>
-                <a href="#">Projects</a> -->
-                <a href="https://www.linkedin.com/in/mark-khrapko/" aria-label="LinkedIn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
-                    </svg>
-                </a>
+            <div class="slide">
+              <img src="images/IMG_9347.jpeg" alt="Slide 6"/>
+              <div class="description">this</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_9338.jpeg" alt="Slide 7"/>
+              <div class="description">One of our first circuits</div>
+            </div>
+            <div class="slide">
+                <img src="images/IMG_0252.jpeg" alt="Slide 1"/>
+                <div class="description">First headset prototype</div>
+              </div>
+              <div class="slide">
+                <img src="images/IMG_4576.jpeg" alt="Slide 2"/>
+                <div class="description">Early chemistry setup</div>
+              </div>
+              <div class="slide">
+                <img src="images/IMG_9906.jpeg" alt="Slide 3"/>
+                <div class="description">Z Fellows demos</div>
+              </div>
+              <div class="slide">
+                <img src="images/IMG_0238.jpeg" alt="Slide 4"/>
+                <div class="description">Soldering fun!</div>
+              </div>
+            <div class="slide">
+              <img src="images/IMG_8799.jpeg" alt="Slide 8"/>
+              <div class="description">Splitting our head model</div>
+            </div>
+            <div class="slide">
+                <img src="images/IMG_8524.jpeg" alt="Slide 10"/>
+                <div class="description">Transcranial ultrasound modeling</div>
+              </div>s
+            <div class="slide">
+              <img src="images/IMG_8841.jpeg" alt="Slide 9"/>
+              <div class="description">Ultrasound skull simulations</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_9911.jpeg" alt="Slide 12"/>
+              <div class="description">Z Fellows demos</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_8771.jpeg" alt="Slide 13"/>
+              <div class="description">Oscilloscopes!</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_9147.jpeg" alt="Slide 14"/>
+              <div class="description">First hydrgoel microneedles</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_0419.jpeg" alt="Slide 15"/>
+              <div class="description">Early cell cultures</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_0079.jpeg" alt="Slide 16"/>
+              <div class="description">Formlabs resin printer setup</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_9371.jpeg" alt="Slide 17"/>
+              <div class="description">Early hydrogel tuning</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_0061.jpeg" alt="Slide 18"/>
+              <div class="description">We got a centrifuge!</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_0216.jpeg" alt="Slide 19"/>
+              <div class="description">Sequence alignment</div>
+            </div>
+            <div class="slide">
+              <img src="images/IMG_0525.jpeg" alt="Slide 20"/>
+              <div class="description">Last samples frozen away</div>
+            </div>
+          </div>
+          <!-- Carousel Buttons -->
+          <button class="carousel-btn prev">&lt;</button>
+          <button class="carousel-btn next">&gt;</button>
+        </div>
+      </section>
+    </main>
+  </div>
 
-                <a href="mailto:mark@orbit.engineering" aria-label="Email">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                    </svg>
-                </a>
-
-            </nav>
-        </header>
-
-
-        <main>
-            <p>From working with proteins to building the future of neurotech with my friends in a warehouse!</p>
-
-            <div class="divider"></div>
-
-            <section class="collapsible">
-                <h2 class="section-title">
-                    <strong>
-                        So Far
-                    </strong>
-                    <span class="caret">^</span>
-                </h2>
-                <div class="section-content">
-                    <p>Ultrasound!</p>
-                    <p>State of the art electrodes </p>
-                </div>
-            </section>
-
-            <div class="divider"></div>
-
-            <section class="collapsible">
-                <h2 class="section-title">
-                    <strong>
-                        Cool Pictures!
-                    </strong>
-                    <span class="caret">^</span>
-                </h2>
-                <div class="section-content">
-                    <p>Pictures</p>
-                    <p>More Pictures</p>
-                </div>
-            </section>
-
-        </main>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
-    <script src="script.js"></script>
+  <!-- MAIN JS -->
+  <script src="script.js"></script>
 </body>
-
 </html>
