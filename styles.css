@@ -2,8 +2,8 @@
 body {
   font-family: "Montserrat", serif;
   line-height: 1.6;
-  color: #000;
-  background-color: rgb(245, 245, 245);
+  color: #fff;
+  background-color: rgb(30, 30, 30);
   margin: 0;
   padding: 5rem 0; /* top padding so content isn't at the very top */
 }
@@ -51,13 +51,13 @@ nav {
   align-items: center;
 }
 nav a:hover svg {
-  stroke: #333;
+  stroke: #ccc;
 }
 
 /* Divider line */
 .divider {
   height: 1px; 
-  background-color: #ddd; 
+  background-color: #444; 
   margin: 20px 0; 
   border: none; 
 }
@@ -134,8 +134,8 @@ strong, b {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0,0,0,0.5);
-  color: #fff;
+  background-color: rgba(255,255,255,0.7);
+  color: #000;
   text-align: center;
   padding: 1rem;
   opacity: 0;
@@ -150,7 +150,8 @@ strong, b {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.4); /* more transparent */
+  background: rgba(0,0,0,0.6); /* dark with transparency */
+  color: #fff;
   border: none;
   font-size: 1rem;
   cursor: pointer;
@@ -159,7 +160,7 @@ strong, b {
   transition: background 0.2s;
 }
 .carousel-btn:hover {
-  background: rgba(255,255,255,0.7); /* slightly less transparent on hover */
+  background: rgba(0,0,0,0.8); /* darker on hover */
 }
 .carousel-btn.prev {
   left: 0.5rem;
