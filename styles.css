@@ -6,6 +6,19 @@ body {
   background-color: rgb(30, 30, 30);
   margin: 0;
   padding: 5rem 0; /* top padding so content isn't at the very top */
+  /* Prevent text selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow selection for specific elements if needed */
+input, textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 /* Container */
