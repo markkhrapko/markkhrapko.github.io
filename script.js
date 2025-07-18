@@ -222,6 +222,28 @@ document.addEventListener('DOMContentLoaded', function() {
         // Subsequent clicks - split existing neurons
         clickCount++;
         
+        // 30% chance to spawn new random particles in addition to splitting
+        const spawnRandom = Math.random() < 0.3;
+        let randomParticlesAdded = 0;
+        
+        if (spawnRandom) {
+          // Spawn 1-2 random particles at click location or random positions
+          const numRandom = Math.random() < 0.7 ? 1 : 2;
+          
+          for (let i = 0; i < numRandom; i++) {
+            // 60% chance to spawn at click location, 40% at random position
+            const useClickPos = Math.random() < 0.6;
+            const x = useClickPos ? e.clientX : Math.random() * window.innerWidth;
+            const y = useClickPos ? e.clientY : Math.random() * window.innerHeight;
+            
+            // Add with random velocity
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1 + Math.random() * 2;
+            addParticleAtPosition(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed);
+            randomParticlesAdded++;
+          }
+        }
+        
         // Calculate how many neurons to split (grows from 1 to ~10)
         const neuronsToSplit = Math.min(Math.floor(1 + clickCount * 0.8), 10);
         
@@ -240,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
           splitNeuron(neuron);
         });
         
-        totalParticlesAdded += neuronsToSplit * 2; // Each split creates 2 new particles
+        totalParticlesAdded += neuronsToSplit * 2 + randomParticlesAdded; // Each split creates 2 new particles plus randoms
       }
       
       localStorage.setItem('curseParticleCount', totalParticlesAdded.toString());
@@ -286,8 +308,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const particles = pJS.particles.array;
       
       // Neural interaction radius - increased for more noticeable effect
-      const neuralRadius = 220 * pJS.canvas.pxratio; // Increased from 180
-      const innerRadius = 80 * pJS.canvas.pxratio; // Increased from 60
+      const neuralRadius = 240 * pJS.canvas.pxratio; // Increased from 220
+      const innerRadius = 100 * pJS.canvas.pxratio; // Increased from 80
       
       // Find particles near cursor for neural connections
       const nearbyParticles = [];
@@ -305,7 +327,8 @@ document.addEventListener('DOMContentLoaded', function() {
             chaosTimer: Math.random() * 100,
             lastDirectionChange: 0,
             turbulencePhase: Math.random() * Math.PI * 2,
-            pauseTimer: 0
+            pauseTimer: 0,
+            orbitAngle: Math.random() * Math.PI * 2
           });
         }
         
@@ -328,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Neural response behavior - only if not over carousel
         if (distance < neuralRadius && distance > 0 && !isOverCarousel) {
           const strength = 1 - (distance / neuralRadius);
-          state.excitementLevel = Math.min(state.excitementLevel + strength * 0.15, 1); // Increased from 0.1
+          state.excitementLevel = Math.min(state.excitementLevel + strength * 0.2, 1); // Increased from 0.15
           
           // Curiosity behavior - particles investigate the cursor
           if (distance < innerRadius && !state.investigating) {
@@ -342,23 +365,30 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Extended investigation with more dynamic movement
             const phase = state.investigationTime * 0.08;
-            const curveFactor = Math.sin(phase) * 0.6 * state.excitementLevel; // Increased from 0.5
-            const pulseFactor = 1 + Math.sin(phase * 2) * 0.3; // Increased from 0.2
-            const slowFactor = 0.15; // Decreased from 0.2 for more attraction
+            const curveFactor = Math.sin(phase) * 0.8 * state.excitementLevel; // Increased from 0.6
+            const pulseFactor = 1 + Math.sin(phase * 2) * 0.4; // Increased from 0.3
+            const slowFactor = 0.1; // Decreased from 0.15 for stronger attraction
             
-            // Complex curving motion
+            // Complex curving motion with orbital dynamics
+            state.orbitAngle += 0.05 + state.excitementLevel * 0.05;
+            const orbitRadius = 20 + Math.sin(phase) * 10;
+            const orbitX = Math.cos(state.orbitAngle) * orbitRadius;
+            const orbitY = Math.sin(state.orbitAngle) * orbitRadius;
+            
             const perpX = -dy / distance;
             const perpY = dx / distance;
             
-            // Figure-8 pattern around cursor with added chaos
+            // Figure-8 pattern around cursor with orbital motion
             particle.vx = particle.vx * slowFactor + 
                          perpX * curveFactor * strength * pulseFactor +
-                         (dx / distance) * Math.cos(phase) * 0.4 + // Increased from 0.3
-                         (Math.random() - 0.5) * 0.2; // Reduced randomness from 0.3
-            particle.vy = particle.vy * slowFactor + 
+                         (dx / distance) * Math.cos(phase) * 0.5 + // Increased from 0.4
+                         orbitX * 0.02 * state.excitementLevel +
+                         (Math.random() - 0.5) * 0.15; // Reduced randomness
+            particle.vy = particle.vy * slowFactor +
                          perpY * curveFactor * strength * pulseFactor +
-                         (dy / distance) * Math.sin(phase) * 0.4 + // Increased from 0.3
-                         (Math.random() - 0.5) * 0.2; // Reduced randomness from 0.3
+                         (dy / distance) * Math.sin(phase) * 0.5 + // Increased from 0.4
+                         orbitY * 0.02 * state.excitementLevel +
+                         (Math.random() - 0.5) * 0.15; // Reduced randomness
             
             // After extended investigation, particle moves away
             if (state.investigationTime > 60) {
@@ -371,9 +401,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           } else if (distance > innerRadius) {
             // Enhanced curious approach - more dramatic curves
-            if (state.lastMouseDist > distance || state.excitementLevel > 0.3) { // Added excitement check
+            if (state.lastMouseDist > distance || state.excitementLevel > 0.25) { // Lowered threshold
               // Getting closer - show strong interest
-              const curvePull = strength * 0.5 * (1 + state.excitementLevel); // Increased from 0.3
+              const curvePull = strength * 0.7 * (1 + state.excitementLevel); // Increased from 0.5
               const perpX = -dy / distance;
               const perpY = dx / distance;
               
@@ -382,19 +412,20 @@ document.addEventListener('DOMContentLoaded', function() {
               particle.vy -= (dy / distance) * curvePull;
               
               // Enhanced perpendicular motion for dramatic curves
-              particle.vx += perpX * curvePull * 0.6; // Decreased from 0.8 for more direct approach
-              particle.vy += perpY * curvePull * 0.6;
+              particle.vx += perpX * curvePull * 0.5; // Reduced for more direct approach
+              particle.vy += perpY * curvePull * 0.5;
               
-              // Add some jitter when excited
-              if (state.excitementLevel > 0.5) {
-                particle.vx += (Math.random() - 0.5) * state.excitementLevel * 0.8; // Reduced from 1.0
-                particle.vy += (Math.random() - 0.5) * state.excitementLevel * 0.8;
+              // Add some jitter when excited - creates nervous energy
+              if (state.excitementLevel > 0.4) {
+                const jitter = state.excitementLevel * 1.2;
+                particle.vx += (Math.random() - 0.5) * jitter;
+                particle.vy += (Math.random() - 0.5) * jitter;
               }
             }
             
             // Gentle continuous pull even when not approaching
             if (distance > innerRadius * 1.5) {
-              const gentlePull = strength * 0.1;
+              const gentlePull = strength * 0.15; // Increased from 0.1
               particle.vx -= (dx / distance) * gentlePull;
               particle.vy -= (dy / distance) * gentlePull;
             }
