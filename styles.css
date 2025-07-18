@@ -242,9 +242,13 @@ nav a:hover svg {
   bottom: 2rem;
   right: 2rem;
   z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
 }
 
-#reset-curse {
+#reset-curse, #neurogenic-burst {
   background: none;
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #666;
@@ -260,10 +264,20 @@ nav a:hover svg {
   position: relative;
 }
 
-#reset-curse:hover {
+#reset-curse:hover, #neurogenic-burst:hover {
   border-color: rgba(255, 255, 255, 0.2);
   color: #999;
   transform: translateY(-2px);
+}
+
+#neurogenic-burst {
+  color: #777;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+#neurogenic-burst:hover {
+  color: #aaa;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Mobile adjustments for reset button */
@@ -271,9 +285,10 @@ nav a:hover svg {
   .glymphatic-container {
     bottom: 1rem;
     right: 1rem;
+    gap: 0.4rem;
   }
   
-  #reset-curse {
+  #reset-curse, #neurogenic-burst {
     font-size: 0.7rem;
     padding: 0.4rem 0.8rem;
   }
@@ -300,7 +315,7 @@ strong, b {
 
 .carousel-track {
   display: flex;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.9s cubic-bezier(0.3, 0, 0.1, 1); /* Even smoother with longer duration */
   height: 100%;
   align-items: center;
   position: relative;
@@ -312,7 +327,7 @@ strong, b {
   flex: 0 0 360px; /* Increased from 300px */
   height: 280px; /* Increased from 240px */
   margin: 0 0.5rem; /* Reduced from 1rem */
-  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.9s cubic-bezier(0.3, 0, 0.1, 1); /* Match track timing */
   opacity: 0.3;
   transform: scale(0.8) translateZ(0);
   filter: grayscale(100%) brightness(0.7);

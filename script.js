@@ -201,6 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Don't add particles if clicking on interactive elements
       if (e.target.closest('.carousel-btn') || 
           e.target.closest('#reset-curse') ||
+          e.target.closest('#neurogenic-burst') ||
           e.target.closest('a')) {
         return;
       }
@@ -271,17 +272,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Neural resonance - particles react to mouse movement
     let mouseX = 0;
     let mouseY = 0;
-    let isOverCarousel = false;
+    let isOverInteractiveElement = false;
     
     // Track when mouse is over carousel
     const carousel = document.querySelector('.carousel-container');
     if (carousel) {
       carousel.addEventListener('mouseenter', () => {
-        isOverCarousel = true;
+        isOverInteractiveElement = true;
       });
       
       carousel.addEventListener('mouseleave', () => {
-        isOverCarousel = false;
+        isOverInteractiveElement = false;
+      });
+    }
+    
+    // Track when mouse is over buttons
+    const glymphaticContainer = document.querySelector('.glymphatic-container');
+    if (glymphaticContainer) {
+      glymphaticContainer.addEventListener('mouseenter', () => {
+        isOverInteractiveElement = true;
+      });
+      
+      glymphaticContainer.addEventListener('mouseleave', () => {
+        isOverInteractiveElement = false;
       });
     }
     
@@ -344,12 +357,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const distance = Math.sqrt(dx * dx + dy * dy);
         
         // Check if particle is near cursor
-        if (distance < neuralRadius && !isOverCarousel) {
+        if (distance < neuralRadius && !isOverInteractiveElement) {
           nearbyParticles.push({ particle, distance, dx, dy });
         }
         
-        // Neural response behavior - only if not over carousel
-        if (distance < neuralRadius && distance > 0 && !isOverCarousel) {
+        // Neural response behavior - only if not over interactive elements
+        if (distance < neuralRadius && distance > 0 && !isOverInteractiveElement) {
           const strength = 1 - (distance / neuralRadius);
           state.excitementLevel = Math.min(state.excitementLevel + strength * 0.2, 1); // Increased from 0.15
           
@@ -571,6 +584,88 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   
+    // Neurogenic burst button handler
+    const burstButton = document.getElementById('neurogenic-burst');
+    if (burstButton) {
+      burstButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        if (!window.pJSDom || !window.pJSDom[0] || !window.pJSDom[0].pJS) return;
+        
+        const pJS = window.pJSDom[0].pJS;
+        const existingParticles = pJS.particles.array.slice(); // Copy existing particles
+        const minParticles = 50; // Minimum particles for a good burst effect
+        
+        // Calculate how many new particles to create
+        const currentCount = existingParticles.length;
+        const particlesToCreate = Math.max(minParticles - currentCount, 20); // At least 20 new ones
+        
+        // Create new particles at random positions
+        for (let i = 0; i < particlesToCreate; i++) {
+          const x = Math.random() * window.innerWidth;
+          const y = Math.random() * window.innerHeight;
+          addParticleAtPosition(x, y);
+        }
+        
+        // Now scatter ALL particles (existing + new) with high velocity
+        setTimeout(() => {
+          const allParticles = pJS.particles.array;
+          
+          allParticles.forEach(particle => {
+            // Random explosion direction and force
+            const angle = Math.random() * Math.PI * 2;
+            const force = 8 + Math.random() * 12; // Very high velocity
+            
+            particle.vx = Math.cos(angle) * force;
+            particle.vy = Math.sin(angle) * force;
+            
+            // Reset any investigation states
+            const state = particleStates.get(particle);
+            if (state) {
+              state.investigating = false;
+              state.excitementLevel = 1; // Max excitement
+              state.chaosTimer = 0;
+            }
+          });
+          
+          // Gradually slow down particles over time
+          let decaySteps = 0;
+          const decayInterval = setInterval(() => {
+            decaySteps++;
+            
+            allParticles.forEach(particle => {
+              // Exponential decay of velocity
+              particle.vx *= 0.92;
+              particle.vy *= 0.92;
+              
+              // Add some randomness as they slow
+              if (decaySteps > 10) {
+                particle.vx += (Math.random() - 0.5) * 0.5;
+                particle.vy += (Math.random() - 0.5) * 0.5;
+              }
+            });
+            
+            // Stop after sufficient decay
+            if (decaySteps > 30) {
+              clearInterval(decayInterval);
+              
+              // Reset excitement levels
+              allParticles.forEach(particle => {
+                const state = particleStates.get(particle);
+                if (state) {
+                  state.excitementLevel = 0;
+                }
+              });
+            }
+          }, 100);
+          
+          // Update particle count
+          totalParticlesAdded = allParticles.length;
+          localStorage.setItem('curseParticleCount', totalParticlesAdded.toString());
+        }, 50); // Small delay to ensure particles are created
+      });
+    }
+  
     // CAROUSEL with centered hero layout
     const track = document.querySelector('.carousel-track');
     const slides = Array.from(track.querySelectorAll('.slide'));
@@ -781,12 +876,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   
-    // Auto-slide every 5 seconds
+    // Auto-slide every 2.75 seconds
     let autoSlide = setInterval(() => {
       navigateNext();
-    }, 5000);
+    }, 2750);
   
-    // Pause on hover
+    // Pause when hovering on any slide
     carouselContainer.addEventListener('mouseenter', () => {
       clearInterval(autoSlide);
     });
@@ -795,7 +890,7 @@ document.addEventListener('DOMContentLoaded', function() {
       clearInterval(autoSlide);
       autoSlide = setInterval(() => {
         navigateNext();
-      }, 5000);
+      }, 2750);
     });
     
     // Pause on focus (accessibility)
@@ -807,7 +902,7 @@ document.addEventListener('DOMContentLoaded', function() {
       clearInterval(autoSlide);
       autoSlide = setInterval(() => {
         navigateNext();
-      }, 5000);
+      }, 2750);
     });
     
     // Expandable sections
