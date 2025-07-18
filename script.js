@@ -923,14 +923,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Expandable sections
     const expandableSections = document.querySelectorAll('.engrams-title.expandable');
+    console.log('Found expandable sections:', expandableSections.length);
     
     expandableSections.forEach(section => {
       section.addEventListener('click', function() {
-        this.classList.toggle('expanded');
+        console.log('Section clicked:', this.textContent);
+        const parentSection = this.closest('.engrams-section');
+        parentSection.classList.toggle('expanded');
         const content = this.nextElementSibling;
         
         if (content) {
-          if (this.classList.contains('expanded')) {
+          if (parentSection.classList.contains('expanded')) {
             content.style.height = content.scrollHeight + 'px';
             content.style.opacity = '1';
             

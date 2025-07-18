@@ -125,6 +125,8 @@ nav a:hover svg {
 .engrams-title.expandable {
   cursor: pointer;
   margin-bottom: 0;
+  position: relative;
+  z-index: 10;
 }
 
 .engrams-title.expandable:hover {
@@ -315,10 +317,22 @@ nav a:hover svg {
   transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.friends-title.expanded + .friends-content {
+/* Content visibility based on expanded state */
+.engrams-section.expanded .friends-content {
   opacity: 1;
   height: auto;
   overflow: visible; /* Allow overflow to be visible when expanded */
+}
+
+/* Friends tagline animation when expanded */
+.engrams-section.expanded .friends-tagline {
+  opacity: 1;
+}
+
+/* Friends list fade-in when parent is expanded */
+.engrams-section.expanded .friends-list.fade-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Simultaneous fade-in for all friend names */
