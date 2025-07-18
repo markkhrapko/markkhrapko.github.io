@@ -5,7 +5,7 @@ body {
   color: #fff;
   background-color: rgb(30, 30, 30);
   margin: 0;
-  padding: 5rem 0; /* top padding so content isn't at the very top */
+  padding: 6rem 0 5rem 0; /* Increased top padding from 5rem to 8rem */
   /* Prevent text selection */
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -48,15 +48,46 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Main content styling */
+main p {
+  margin: 0.5rem 0;
+}
+
+/* First paragraph - role (neurotech @ orbit) */
+main p:first-child {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-size: 0.9375rem; /* Slightly smaller than name */
+  color: #c0c0c0; /* Soft grey */
+  font-weight: 300; /* Light weight */
+  letter-spacing: 0.01em;
+}
+
+/* Tagline styling */
+.tagline {
+  font-size: 0.8125rem; /* Refined size */
+  color: #808080; /* Medium grey */
+  font-style: normal; /* Remove italic for cleaner look */
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  line-height: 1.4;
+  margin-top: 0 !important;
+  margin-bottom: 0;
+  max-width: 28rem; /* Prevent line from being too long */
+}
+
 /* HEADER */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem; /* Reduced from 2.5rem to bring name and role closer */
 }
 .logo {
-  font-size: 1rem;
+  font-size: 1.125rem; /* Slightly larger */
+  letter-spacing: 0.02em; /* Subtle spacing for elegance */
+  font-weight: 400; /* Regular weight for sophistication */
+  color: #f5f5f5; /* Slightly off-white for softness */
 }
 nav {
   display: flex;
@@ -67,40 +98,240 @@ nav a:hover svg {
   stroke: #ccc;
 }
 
-/* Divider line */
+/* Remove divider styles */
 .divider {
-  height: 1px; 
-  background-color: #444; 
-  margin: 20px 0; 
-  border: none; 
+  display: none;
 }
 
-/* Collapsibles */
-.collapsible {
-  margin-bottom: 1.5rem;
+/* Engrams Section - Refined */
+.engrams-section {
+  margin: 5rem 0 3rem 0;
+  max-width: 32rem;
 }
-.section-title {
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0;
-  font-size: 1rem;
-  font-weight: normal;
-}
-.caret {
-  transition: transform 0.3s ease;
-}
-.section-title.open .caret {
-  transform: rotate(180deg);
-}
-.section-content {
-  display: block;
-  margin-top: 1rem;
+
+.engrams-title {
+  position: relative;
   font-size: 0.875rem;
+  font-weight: 300;
+  margin: 0 0 2rem 0;
+  display: inline-block;
+  color: #b0b0b0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
 }
-.section-content.closed {
+
+/* Expandable title styles */
+.engrams-title.expandable {
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.engrams-title.expandable:hover {
+  color: #d0d0d0;
+}
+
+.engrams-title .underlined {
+  text-decoration: none;
+  position: relative;
+  cursor: pointer;
+}
+
+.engrams-title .underlined::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #666;
+  transition: background 0.3s ease;
+}
+
+.engrams-title.expandable:hover .underlined::after {
+  background: #888;
+}
+
+/* Definition tooltip */
+.engrams-title .definition {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 12px;
+  background-color: rgba(40, 40, 40, 0.95);
+  color: #b0b0b0;
+  padding: 0.75rem 1rem;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  width: 280px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 300;
+}
+
+/* Hide definition on expandable sections */
+.engrams-title.expandable .definition {
   display: none;
+}
+
+/* Content container with smooth transitions */
+.engrams-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.4s ease 0.1s,
+              margin-top 0.3s ease;
+  margin-top: 0;
+}
+
+/* Expanded state */
+.engrams-section.expanded .engrams-content {
+  max-height: 500px; /* Adjust based on content */
+  opacity: 1;
+  margin-top: 2rem;
+}
+
+.engrams-section.expanded .engrams-title {
+  margin-bottom: 0;
+  color: #d0d0d0;
+}
+
+/* Journey list styling - Refined */
+.journey-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.journey-list li {
+  position: relative;
+  padding-left: 0;
+  margin-bottom: 1.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #a0a0a0;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+.journey-list li::before {
+  content: none; /* Remove bullets for cleaner look */
+}
+
+/* Add subtle indent to some items for hierarchy */
+.journey-list li:nth-child(2n) {
+  padding-left: 1.5rem;
+}
+
+/* Last item slightly different */
+.journey-list li:last-child {
+  color: #c0c0c0;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+/* Reset Button - Refined and Repositioned */
+.glymphatic-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+}
+
+#reset-curse {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #666;
+  padding: 0.5rem 1rem;
+  font-family: 'Montserrat', serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 2px;
+  text-transform: lowercase;
+  position: relative;
+}
+
+#reset-curse:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #999;
+  transform: translateY(-2px);
+}
+
+/* Glymphatic Tooltip */
+.glymphatic-tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.75rem);
+  right: 0;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  width: 220px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: none;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Arrow pointing down */
+.glymphatic-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 1.5rem;
+  border: 6px solid transparent;
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Show tooltip on hover */
+.glymphatic-container:hover .glymphatic-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Mobile adjustments for reset button */
+@media (max-width: 600px) {
+  .glymphatic-container {
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  #reset-curse {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .glymphatic-tooltip {
+    width: 180px;
+    font-size: 0.7rem;
+    padding: 0.6rem 0.8rem;
+    right: auto;
+    left: 0;
+    transform-origin: bottom left;
+  }
+  
+  .glymphatic-tooltip::after {
+    right: auto;
+    left: 1.5rem;
+  }
 }
 
 /* Bold styling */
@@ -108,86 +339,153 @@ strong, b {
   font-weight: 500;
 }
 
-/* Carousel Section */
+/* Carousel Section - Compact Hero Layout */
 .carousel-section {
-  margin-bottom: 1.5rem;
+  margin: 6rem 0 4rem 0; /* Increased top margin from 2rem to 4rem */
+  position: relative;
 }
 
-/* Carousel container & track */
+/* Carousel container */
 .carousel-container {
   position: relative;
-  overflow: hidden; 
-  margin-top: 1rem;
+  overflow: hidden;
+  height: 320px; /* Increased from 280px */
+  margin: 0 -2rem; /* Slight negative margin for better visual */
 }
+
 .carousel-track {
   display: flex;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  height: 100%;
+  align-items: center;
+  position: relative;
 }
 
-/* Show 3 pictures at once */
+/* Centered hero slides */
 .slide {
   position: relative;
-  flex: 0 0 33.3333%;
-  box-sizing: border-box;
-  padding: 0.5rem;
+  flex: 0 0 360px; /* Increased from 300px */
+  height: 280px; /* Increased from 240px */
+  margin: 0 0.5rem; /* Reduced from 1rem */
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  opacity: 0.3;
+  transform: scale(0.8) translateZ(0);
+  filter: grayscale(100%) brightness(0.7);
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 4px;
 }
 
-/* Uniform height w/ object-fit cover */
+/* Previous/Next slides (partially visible) */
+.slide.prev,
+.slide.next {
+  opacity: 0.5;
+  transform: scale(0.85) translateZ(0);
+  filter: grayscale(80%) brightness(0.8);
+}
+
+/* Active slide */
+.slide.active {
+  opacity: 1;
+  transform: scale(1.05) translateZ(0);
+  filter: none;
+  z-index: 2;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Slide images */
 .slide img {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Hover overlay with description */
+.slide:hover img {
+  transform: scale(1.05);
+}
+
+/* Remove description completely */
 .description {
+  display: none;
+}
+
+/* Elegant dot navigation */
+.carousel-nav {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(255,255,255,0.7);
-  color: #000;
-  text-align: center;
-  padding: 1rem;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.slide:hover .description {
-  opacity: 1;
+  gap: 0.5rem;
+  z-index: 3;
 }
 
-/* Carousel Buttons (MORE TRANSPARENT) */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.6); /* dark with transparency */
-  color: #fff;
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #444;
   border: none;
-  font-size: 1rem;
   cursor: pointer;
-  padding: 0.3rem 0.6rem;
-  z-index: 2;
-  transition: background 0.2s;
-}
-.carousel-btn:hover {
-  background: rgba(0,0,0,0.8); /* darker on hover */
-}
-.carousel-btn.prev {
-  left: 0.5rem;
-}
-.carousel-btn.next {
-  right: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 0;
 }
 
-/* Responsive: 2 pictures at once if narrower than 600px */
+.carousel-dot.active {
+  background: #888;
+  width: 20px;
+  border-radius: 3px;
+}
+
+.carousel-dot:hover {
+  background: #666;
+}
+
+/* Remove old buttons and hints */
+.carousel-btn,
+.carousel-hint {
+  display: none;
+}
+
+/* Smooth edges fade */
+.carousel-container::before,
+.carousel-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.carousel-container::before {
+  left: 0;
+  background: linear-gradient(to right, rgb(30, 30, 30) 0%, transparent 100%);
+}
+
+.carousel-container::after {
+  right: 0;
+  background: linear-gradient(to left, rgb(30, 30, 30) 0%, transparent 100%);
+}
+
+/* Responsive adjustments */
 @media (max-width: 600px) {
-  .slide {
-    flex: 0 0 50%;
+  .carousel-container {
+    height: 240px; /* Increased from 200px */
+    margin: 0 -1rem;
   }
-  .slide img {
-    height: 150px;
+  
+  .slide {
+    flex: 0 0 240px; /* Increased from 200px */
+    height: 200px; /* Increased from 160px */
+    margin: 0 0.4rem; /* Reduced from 0.75rem */
+  }
+  
+  .carousel-container::before,
+  .carousel-container::after {
+    width: 30px;
   }
 }

@@ -71,47 +71,10 @@
     <!-- MAIN CONTENT -->
     <main>
       <p>neurotech @ orbit</p>
-
-      <div class="divider"></div>
-    
-      <!-- Collapsible #1: Previously -->
-      <section class="collapsible">
-        <h2 class="section-title">
-          <strong>Previously</strong>
-          <span class="caret">^</span>
-        </h2>
-        <div class="section-content">
-          <p>Explored bacterial fitness landscapes & enzyme interactions</p>
-          <p>Studied virus-antibody binding data with metadynamics</p>
-          <p>Developed models for mtDNA and germline mutations</p>
-        </div>
-      </section>
-
-      <div class="divider"></div>
-
-      <!-- Collapsible #2: Now -->
-      <section class="collapsible">
-        <h2 class="section-title">
-          <strong>Now - Neurotech!</strong>
-          <span class="caret">^</span>
-        </h2>
-        <div class="section-content">
-          <p>Designing state of the art electrodes</p>
-          <p>Mastering sleep</p>
-          <p>Building a future without neurodegenerative disease</p>
-          <p>And creating amazing <em>secret</em> tech along the way</p>
-        </div>
-      </section>
-
-      <div class="divider"></div>
+      <p class="tagline">Still chasing the questions I had as a kid—just slightly better at answering them.</p>
 
       <!-- CAROUSEL SECTION (with hover overlay) -->
       <section class="carousel-section">
-        <h2 class="section-title">
-          <strong>So Far:</strong>
-          <span class="caret"></span>
-        </h2>
-
         <div class="carousel-container">
           <div class="carousel-track">
             <!-- Slides (replace images with your own) -->
@@ -188,12 +151,53 @@
                 <div class="description">Last samples frozen away</div>
               </div>
           </div>
-          <!-- Carousel Buttons -->
-          <button class="carousel-btn prev">&lt;</button>
-          <button class="carousel-btn next">&gt;</button>
+          <!-- Navigation dots -->
+          <div class="carousel-nav"></div>
+        </div>
+      </section>
+      
+      <!-- Synapses Section -->
+      <section class="engrams-section">
+        <h2 class="engrams-title expandable">
+          <span class="underlined">Synapses</span>
+          <span class="definition">The junction between neurons, where connections form and signals pass—each representing a pivotal moment or insight that shaped my path.</span>
+        </h2>
+        
+        <div class="engrams-content">
+          <ul class="journey-list">
+            <li>Endlessly curious kid—raised by parents who patiently answered every relentless "why?"</li>
+            <li>Dreamed of becoming a professor, driven by a dual obsession: deep understanding and sharing it.</li>
+            <li>Realized every meaningful question traced back to physics—decided to start there to understand everything else.</li>
+            <li>Studied Physics & Math at university, diving deeply into biophysics research along the way.</li>
+            <li>Recognized the most important problem in the world—set out to solve it through Orbit.</li>
+          </ul>
+        </div>
+      </section>
+      
+      <!-- Dendritic Branches Section -->
+      <section class="engrams-section">
+        <h2 class="engrams-title expandable">
+          <span class="underlined">Dendritic Branches</span>
+          <span class="definition">The extending pathways of interests and passions that grow from the core—shaping a fuller picture of who I am beyond the lab.</span>
+        </h2>
+        
+        <div class="engrams-content">
+          <ul class="journey-list">
+            <li>Chess enthusiast—my grandfather taught me, and I never stopped playing.</li>
+            <li>Competitive volleyball player—refused to stay mediocre, trained relentlessly until I stood out.</li>
+            <li>Global hiker—have chased adventures all over the world (ask me where!).</li>
+            <li>Enthusiastic cook—my steak has earned me friendships.</li>
+            <li>People person—obsessed with helping others become extraordinary.</li>
+          </ul>
         </div>
       </section>
     </main>
+    
+    <!-- Reset Curse Button -->
+    <div class="glymphatic-container">
+      <button id="reset-curse">glymphatic flush</button>
+      <span class="glymphatic-tooltip">The brain's waste clearance system that removes metabolic debris and neurotoxins during sleep, discovered in 2012. Essential for preventing neurodegeneration.</span>
+    </div>
   </div>
 
   <!-- MAIN JS -->
