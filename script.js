@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Randomize friends list order
+    const friendsList = document.getElementById('friends-list');
+    if (friendsList) {
+      const friends = Array.from(friendsList.children);
+      
+      // Fisher-Yates shuffle algorithm
+      for (let i = friends.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [friends[i], friends[j]] = [friends[j], friends[i]];
+      }
+      
+      // Clear the list and re-append in new order
+      friendsList.innerHTML = '';
+      friends.forEach(friend => friendsList.appendChild(friend));
+    }
+    
     // CURSE PARTICLE SYSTEM
     // Load saved particle count from localStorage
     let savedCount = parseInt(localStorage.getItem('curseParticleCount') || '0');
@@ -908,37 +924,85 @@ document.addEventListener('DOMContentLoaded', function() {
     // Expandable sections
     const expandableSections = document.querySelectorAll('.engrams-title.expandable');
     
-    expandableSections.forEach(title => {
-      title.addEventListener('click', function(e) {
-        e.stopPropagation();
+    expandableSections.forEach(section => {
+      section.addEventListener('click', function() {
+        this.classList.toggle('expanded');
+        const content = this.nextElementSibling;
         
-        const section = this.closest('.engrams-section');
-        const content = section.querySelector('.engrams-content');
-        
-        // Toggle expanded class
-        section.classList.toggle('expanded');
-        
-        // For smooth height animation, we need to set a specific max-height
-        if (section.classList.contains('expanded')) {
-          // Temporarily set max-height to none to measure actual height
-          content.style.maxHeight = 'none';
-          const height = content.scrollHeight;
-          content.style.maxHeight = '0px';
-          
-          // Force reflow
-          content.offsetHeight;
-          
-          // Set to actual height
-          content.style.maxHeight = height + 'px';
-        } else {
-          // Set current height first for smooth transition
-          content.style.maxHeight = content.scrollHeight + 'px';
-          
-          // Force reflow
-          content.offsetHeight;
-          
-          // Then collapse
-          content.style.maxHeight = '0px';
+        if (content) {
+          if (this.classList.contains('expanded')) {
+            content.style.height = content.scrollHeight + 'px';
+            content.style.opacity = '1';
+            
+            // Special handling for friends section
+            if (this.classList.contains('friends-title')) {
+              // Start typewriter effect
+              const tagline = document.getElementById('friends-tagline');
+              const friendsList = document.getElementById('friends-list');
+              const text1 = "Every one of these people has shaped how I think and who I've become.";
+              const text2 = "They are incredible!";
+              
+              // Clear any existing content
+              tagline.textContent = '';
+              tagline.classList.remove('typing');
+              friendsList.classList.remove('fade-in');
+              
+              // Start typing after a short delay
+              setTimeout(() => {
+                tagline.classList.add('typing');
+                let index = 0;
+                let currentText = text1;
+                let isSecondLine = false;
+                
+                const typeInterval = setInterval(() => {
+                  if (index < currentText.length) {
+                    tagline.textContent += currentText[index];
+                    index++;
+                  } else if (!isSecondLine) {
+                    // Add line break and pause before second line
+                    tagline.innerHTML += '<br>';
+                    clearInterval(typeInterval);
+                    
+                    // Pause for 800ms before typing second line
+                    setTimeout(() => {
+                      currentText = text2;
+                      index = 0;
+                      isSecondLine = true;
+                      
+                      // Resume typing
+                      const typeInterval2 = setInterval(() => {
+                        if (index < currentText.length) {
+                          tagline.innerHTML += currentText[index];
+                          index++;
+                        } else {
+                          // Typing complete - keep the typing class for cursor
+                          clearInterval(typeInterval2);
+                          // Don't remove typing class to keep content visible
+                          
+                          // Fade in all friends together after typing completes
+                          setTimeout(() => {
+                            friendsList.classList.add('fade-in');
+                          }, 500);
+                        }
+                      }, 30); // Faster typing speed
+                    }, 800); // Pause duration
+                  }
+                }, 30); // Faster typing speed (30ms per character)
+              }, 300);
+            }
+          } else {
+            content.style.height = '0';
+            content.style.opacity = '0';
+            
+            // Reset friends section if closing
+            if (this.classList.contains('friends-title')) {
+              const tagline = document.getElementById('friends-tagline');
+              const friendsList = document.getElementById('friends-list');
+              tagline.textContent = '';
+              tagline.classList.remove('typing');
+              friendsList.classList.remove('fade-in');
+            }
+          }
         }
       });
     });

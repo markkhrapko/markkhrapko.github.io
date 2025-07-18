@@ -236,6 +236,155 @@ nav a:hover svg {
   margin-bottom: 0;
 }
 
+/* Sections */
+.engrams-section {
+  margin-bottom: 3.5rem;
+}
+
+.engrams-section:last-of-type {
+  margin-bottom: 5rem; /* Extra space before friends section */
+}
+
+/* Friends Section - More space before it */
+.engrams-section:has(.friends-title) {
+  margin-top: 5rem;
+}
+
+/* Friends List - Similar to journey list but with link styling */
+.friends-title {
+  margin-bottom: 1.5rem;
+}
+
+.friends-header {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: #b0b0b0;
+  text-transform: lowercase;
+  font-style: italic;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.friends-tagline {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #d0d0d0;
+  line-height: 1.6;
+  display: block;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  text-decoration-color: #808080;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  margin: 0 0 2rem 0;
+  min-height: 2.5rem; /* Reserve space to prevent layout shift */
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+.friends-tagline.typing {
+  opacity: 1;
+}
+
+.friends-tagline::after {
+  content: '|';
+  opacity: 0;
+  animation: blink 1s infinite;
+  color: #808080;
+  font-weight: 300;
+}
+
+.friends-tagline.typing::after {
+  opacity: 1;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.friends-content {
+  display: block;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  margin-top: 1.5rem;
+  padding-bottom: 0.5rem; /* Add padding to prevent cutoff */
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.friends-title.expanded + .friends-content {
+  opacity: 1;
+  height: auto;
+  overflow: visible; /* Allow overflow to be visible when expanded */
+}
+
+/* Simultaneous fade-in for all friend names */
+.friends-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.friends-list.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.friends-list li {
+  margin: 0;
+  padding: 0;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+.friends-list a {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: #e5e5e5;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  letter-spacing: 0.02em;
+  display: inline-block;
+  position: relative;
+  font-weight: 400;
+}
+
+.friends-list a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: #808080;
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.friends-list a:hover {
+  color: #fff;
+}
+
+.friends-list a:hover::after {
+  width: 100%;
+}
+
+/* Friends without links */
+.friends-list .no-link {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: #e5e5e5;
+  letter-spacing: 0.02em;
+  display: inline-block;
+  font-weight: 400;
+}
+
 /* Reset Button - Refined and Repositioned */
 .glymphatic-container {
   position: fixed;
