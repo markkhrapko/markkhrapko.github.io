@@ -238,16 +238,16 @@ nav a:hover svg {
 
 /* Sections */
 .engrams-section {
-  margin-bottom: 3.5rem;
+  margin-bottom: 1.25rem; /* Further reduced for tighter spacing */
 }
 
 .engrams-section:last-of-type {
-  margin-bottom: 5rem; /* Extra space before friends section */
+  margin-bottom: 1.25rem; /* Same spacing for consistency */
 }
 
 /* Friends Section - More space before it */
 .engrams-section:has(.friends-title) {
-  margin-top: 5rem;
+  margin-top: 1.25rem; /* Same as others for even spacing */
 }
 
 /* Friends List - Similar to journey list but with link styling */
