@@ -113,7 +113,7 @@ nav a:hover svg {
   position: relative;
   font-size: 0.875rem;
   font-weight: 300;
-  margin: 0 0 2rem 0;
+  margin: 0; /* Remove all margins */
   display: inline-block;
   color: #b0b0b0;
   letter-spacing: 0.05em;
@@ -190,6 +190,8 @@ nav a:hover svg {
               opacity 0.4s ease 0.1s,
               margin-top 0.3s ease;
   margin-top: 0;
+  margin-bottom: 0; /* Ensure no bottom margin when collapsed */
+  padding: 0; /* Ensure no padding when collapsed */
 }
 
 /* Expanded state */
@@ -240,16 +242,16 @@ nav a:hover svg {
 
 /* Sections */
 .engrams-section {
-  margin-bottom: 1.25rem; /* Further reduced for tighter spacing */
+  margin-bottom: 1.25rem; /* Consistent spacing between all sections */
 }
 
 .engrams-section:last-of-type {
   margin-bottom: 1.25rem; /* Same spacing for consistency */
 }
 
-/* Friends Section - More space before it */
+/* Friends Section - remove extra top margin for even spacing */
 .engrams-section:has(.friends-title) {
-  margin-top: 1.25rem; /* Same as others for even spacing */
+  margin-top: 0; /* Remove extra top margin */
 }
 
 /* Friends List - Similar to journey list but with link styling */
@@ -464,7 +466,7 @@ strong, b {
 
 /* Carousel Section - Compact Hero Layout */
 .carousel-section {
-  margin: 6rem 0 4rem 0; /* Increased top margin from 2rem to 4rem */
+  margin: 6rem 0 1.25rem 0; /* Reduced bottom margin to match section spacing */
   position: relative;
 }
 
