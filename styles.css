@@ -109,11 +109,18 @@ nav a:hover svg {
   max-width: 32rem;
 }
 
+/* Reset h2 margins globally */
+h2 {
+  margin: 0;
+  padding: 0;
+}
+
 .engrams-title {
   position: relative;
   font-size: 0.875rem;
   font-weight: 300;
   margin: 0; /* Remove all margins */
+  padding: 0; /* No padding */
   display: inline-block;
   color: #b0b0b0;
   letter-spacing: 0.05em;
@@ -242,7 +249,9 @@ nav a:hover svg {
 
 /* Sections */
 .engrams-section {
-  margin-bottom: 1.25rem; /* Consistent spacing between all sections */
+  margin: 0 0 1.25rem 0; /* Only bottom margin */
+  padding: 0; /* No padding */
+  position: relative;
 }
 
 .engrams-section:last-of-type {
@@ -466,7 +475,7 @@ strong, b {
 
 /* Carousel Section - Compact Hero Layout */
 .carousel-section {
-  margin: 6rem 0 1.25rem 0; /* Reduced bottom margin to match section spacing */
+  margin: 6rem 0 6.5rem 0; /* Increased bottom margin from 1.25rem to 2.5rem */
   position: relative;
 }
 
