@@ -1,4 +1,35 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Version control and cleanup
+    const CURRENT_VERSION = '2.0';
+    const storedVersion = localStorage.getItem('siteVersion');
+    
+    // If version changed or doesn't exist, clean up old data
+    if (storedVersion !== CURRENT_VERSION) {
+      console.log('New version detected, cleaning up old data...');
+      
+      // Clear specific items that might cause issues
+      localStorage.removeItem('curseParticleCount');
+      
+      // If you want to clear everything except certain items:
+      // const itemsToKeep = ['userPreference1', 'userPreference2'];
+      // Object.keys(localStorage).forEach(key => {
+      //   if (!itemsToKeep.includes(key) && key !== 'siteVersion') {
+      //     localStorage.removeItem(key);
+      //   }
+      // });
+      
+      // Update version
+      localStorage.setItem('siteVersion', CURRENT_VERSION);
+      
+      // Force reload to ensure fresh assets
+      if (storedVersion && storedVersion !== CURRENT_VERSION) {
+        window.location.reload(true);
+      }
+    }
+    
+    // Global variables for friends list shuffling
+    let firstShuffle = true;
+    
     // Randomize friends list order
     const friendsList = document.getElementById('friends-list');
     let isHoveringFriend = false;
@@ -6,7 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to shuffle friends
     function shuffleFriends(smooth = false) {
-      if (!friendsList || isHoveringFriend) return;
+      // For the first shuffle after opening, ignore hover state
+      if (!friendsList || (!firstShuffle && isHoveringFriend)) return;
       
       const friends = Array.from(friendsList.children);
       if (friends.length === 0) return;
@@ -47,41 +79,66 @@ document.addEventListener('DOMContentLoaded', function() {
               friend.style.opacity = '1';
             }, index * 60);
           });
+          
+          // Re-attach hover listeners after DOM manipulation
+          attachHoverListeners();
         }, 200);
       } else {
         // Initial load - no animation
         friendsList.innerHTML = '';
         shuffled.forEach(friend => friendsList.appendChild(friend));
+        attachHoverListeners();
       }
+    }
+    
+    // Function to attach hover listeners to individual friend links
+    function attachHoverListeners() {
+      if (!friendsList) return;
+      
+      // Get all links and spans within the friends list
+      const friendElements = friendsList.querySelectorAll('a, span.no-link');
+      
+      friendElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+          isHoveringFriend = true;
+        });
+        
+        element.addEventListener('mouseleave', () => {
+          isHoveringFriend = false;
+        });
+      });
     }
     
     // Initial shuffle on page load
     shuffleFriends(false);
     
-    // Set up hover tracking for the friends list
+    // Set up hover tracking for the friends list links
     if (friendsList) {
-      // Track hover on the entire friends list container
-      friendsList.addEventListener('mouseenter', () => {
-        isHoveringFriend = true;
-        clearInterval(rearrangeInterval);
-      });
-      
-      friendsList.addEventListener('mouseleave', () => {
-        isHoveringFriend = false;
-        // Restart the interval when mouse leaves
-        startRearrangeInterval();
-      });
+      // Initial attachment of hover listeners
+      attachHoverListeners();
       
       // Function to start the rearrange interval
-      function startRearrangeInterval() {
+      function startRearrangeInterval(firstTime = false) {
         clearInterval(rearrangeInterval);
+        firstShuffle = firstTime;
+        
+        // Use 3 seconds for the first shuffle after opening, 8 seconds thereafter
+        const interval = firstTime ? 3000 : 8000;
+        
         rearrangeInterval = setInterval(() => {
           const friendsSection = document.getElementById('friends-section');
           // Only rearrange if the friends section is expanded and visible
           if (friendsSection && friendsSection.classList.contains('expanded')) {
             shuffleFriends(true);
+            
+            // After the first shuffle, switch to 8 second intervals
+            if (firstTime) {
+              firstShuffle = false;
+              clearInterval(rearrangeInterval);
+              startRearrangeInterval(false);
+            }
           }
-        }, 5000); // Rearrange every 3 seconds
+        }, interval);
       }
       
       // Start the interval
@@ -1012,6 +1069,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Special handling for friends section
             if (this.classList.contains('friends-title')) {
+              // Reset first shuffle flag and trigger first-time shuffle interval when section opens
+              firstShuffle = true;
+              startRearrangeInterval(true);
+              
               // Start typewriter effect
               const tagline = document.getElementById('friends-tagline');
               const friendsList = document.getElementById('friends-list');
