@@ -623,3 +623,25 @@ strong, b {
     width: 30px;
   }
 }
+
+/* Friends List Styling */
+.friends-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.friends-list li {
+  position: relative;
+  transform-origin: center;
+  transition: transform 0.6s ease, opacity 0.3s ease;
+}
+
+.friends-list.fade-in {
+  opacity: 1;
+}

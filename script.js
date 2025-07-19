@@ -1,18 +1,91 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Randomize friends list order
     const friendsList = document.getElementById('friends-list');
-    if (friendsList) {
+    let isHoveringFriend = false;
+    let rearrangeInterval;
+    
+    // Function to shuffle friends
+    function shuffleFriends(smooth = false) {
+      if (!friendsList || isHoveringFriend) return;
+      
       const friends = Array.from(friendsList.children);
+      if (friends.length === 0) return;
+      
+      // Create a copy of the array to shuffle
+      const shuffled = [...friends];
       
       // Fisher-Yates shuffle algorithm
-      for (let i = friends.length - 1; i > 0; i--) {
+      for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [friends[i], friends[j]] = [friends[j], friends[i]];
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
       }
       
-      // Clear the list and re-append in new order
-      friendsList.innerHTML = '';
-      friends.forEach(friend => friendsList.appendChild(friend));
+      // Check if the order actually changed
+      const orderChanged = shuffled.some((friend, index) => friend !== friends[index]);
+      if (!orderChanged && smooth) {
+        // If order didn't change, try again
+        shuffleFriends(smooth);
+        return;
+      }
+      
+      if (smooth) {
+        // Add transition for smooth rearrangement
+        friends.forEach((friend) => {
+          friend.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+          friend.style.transform = 'scale(0.95)';
+          friend.style.opacity = '0.6';
+        });
+        
+        setTimeout(() => {
+          // Clear and re-append in new order
+          friendsList.innerHTML = '';
+          shuffled.forEach((friend, index) => {
+            friendsList.appendChild(friend);
+            // Reset styles with delay for staggered effect
+            setTimeout(() => {
+              friend.style.transform = 'scale(1)';
+              friend.style.opacity = '1';
+            }, index * 60);
+          });
+        }, 200);
+      } else {
+        // Initial load - no animation
+        friendsList.innerHTML = '';
+        shuffled.forEach(friend => friendsList.appendChild(friend));
+      }
+    }
+    
+    // Initial shuffle on page load
+    shuffleFriends(false);
+    
+    // Set up hover tracking for the friends list
+    if (friendsList) {
+      // Track hover on the entire friends list container
+      friendsList.addEventListener('mouseenter', () => {
+        isHoveringFriend = true;
+        clearInterval(rearrangeInterval);
+      });
+      
+      friendsList.addEventListener('mouseleave', () => {
+        isHoveringFriend = false;
+        // Restart the interval when mouse leaves
+        startRearrangeInterval();
+      });
+      
+      // Function to start the rearrange interval
+      function startRearrangeInterval() {
+        clearInterval(rearrangeInterval);
+        rearrangeInterval = setInterval(() => {
+          const friendsSection = document.getElementById('friends-section');
+          // Only rearrange if the friends section is expanded and visible
+          if (friendsSection && friendsSection.classList.contains('expanded')) {
+            shuffleFriends(true);
+          }
+        }, 5000); // Rearrange every 3 seconds
+      }
+      
+      // Start the interval
+      startRearrangeInterval();
     }
     
     // CURSE PARTICLE SYSTEM
