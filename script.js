@@ -366,33 +366,47 @@ document.addEventListener('DOMContentLoaded', function() {
         addParticleAtPosition(x2, y2);
         totalParticlesAdded = 2;
       } else {
-        // Subsequent clicks - split existing neurons
+        // Subsequent clicks - split existing neurons AND add random particles
         clickCount++;
         
-        // 30% chance to spawn new random particles in addition to splitting
-        const spawnRandom = Math.random() < 0.3;
+        // Always spawn random particles to prevent clustering
+        const minRandom = 2; // Minimum random particles per click
+        const maxRandom = 5; // Maximum random particles per click
+        const numRandom = minRandom + Math.floor(Math.random() * (maxRandom - minRandom + 1));
         let randomParticlesAdded = 0;
         
-        if (spawnRandom) {
-          // Spawn 1-2 random particles at click location or random positions
-          const numRandom = Math.random() < 0.7 ? 1 : 2;
+        // Spawn random particles across the screen
+        for (let i = 0; i < numRandom; i++) {
+          // 20% chance to spawn near click, 80% completely random
+          const nearClick = Math.random() < 0.2;
           
-          for (let i = 0; i < numRandom; i++) {
-            // 60% chance to spawn at click location, 40% at random position
-            const useClickPos = Math.random() < 0.6;
-            const x = useClickPos ? e.clientX : Math.random() * window.innerWidth;
-            const y = useClickPos ? e.clientY : Math.random() * window.innerHeight;
-            
-            // Add with random velocity
+          let x, y;
+          if (nearClick) {
+            // Spawn within a larger radius of click to reduce clustering
+            const radius = 100 + Math.random() * 150; // 100-250px from click
             const angle = Math.random() * Math.PI * 2;
-            const speed = 1 + Math.random() * 2;
-            addParticleAtPosition(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed);
-            randomParticlesAdded++;
+            x = e.clientX + Math.cos(angle) * radius;
+            y = e.clientY + Math.sin(angle) * radius;
+            
+            // Keep within screen bounds
+            x = Math.max(0, Math.min(window.innerWidth, x));
+            y = Math.max(0, Math.min(window.innerHeight, y));
+          } else {
+            // Completely random position with some margin from edges
+            const margin = 50;
+            x = margin + Math.random() * (window.innerWidth - margin * 2);
+            y = margin + Math.random() * (window.innerHeight - margin * 2);
           }
+          
+          // Add with random velocity for more dynamic movement
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 0.5 + Math.random() * 2.5;
+          addParticleAtPosition(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed);
+          randomParticlesAdded++;
         }
         
-        // Calculate how many neurons to split (grows from 1 to ~10)
-        const neuronsToSplit = Math.min(Math.floor(1 + clickCount * 0.8), 10);
+        // Also split some existing neurons (but fewer to balance with random spawns)
+        const neuronsToSplit = Math.min(Math.floor(1 + clickCount * 0.4), 5); // Reduced from 0.8 to 0.4
         
         // Randomly select neurons to split
         const availableNeurons = [...particles];
@@ -1006,6 +1020,62 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize first slide
     goToSlide(0);
     
+    // Carousel activation state
+    let carouselActivated = false;
+    let autoSlide = null;
+    
+    // Function to activate carousel
+    function activateCarousel() {
+      if (!carouselActivated) {
+        carouselActivated = true;
+        carouselContainer.classList.add('active');
+        
+        // Start auto-slide after activation
+        autoSlide = setInterval(() => {
+          navigateNext();
+        }, 2750);
+      }
+    }
+    
+    // Activate carousel on first interaction
+    carouselContainer.addEventListener('mouseenter', () => {
+      activateCarousel();
+    });
+    
+
+    
+    // Pause auto-slide when hovering (after activation)
+    carouselContainer.addEventListener('mouseenter', () => {
+      if (autoSlide) {
+        clearInterval(autoSlide);
+      }
+    });
+    
+    carouselContainer.addEventListener('mouseleave', () => {
+      if (carouselActivated && autoSlide) {
+        clearInterval(autoSlide);
+        autoSlide = setInterval(() => {
+          navigateNext();
+        }, 2750);
+      }
+    });
+    
+    // Pause on focus (accessibility)
+    carouselContainer.addEventListener('focusin', () => {
+      if (autoSlide) {
+        clearInterval(autoSlide);
+      }
+    });
+  
+    carouselContainer.addEventListener('focusout', () => {
+      if (carouselActivated) {
+        clearInterval(autoSlide);
+        autoSlide = setInterval(() => {
+          navigateNext();
+        }, 2750);
+      }
+    });
+    
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') {
@@ -1040,8 +1110,12 @@ document.addEventListener('DOMContentLoaded', function() {
     carouselContainer.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
       isSwiping = true;
+      // Activate carousel on touch if not already active
+      activateCarousel();
       // Pause auto-slide during touch
-      clearInterval(autoSlide);
+      if (autoSlide) {
+        clearInterval(autoSlide);
+      }
     }, { passive: true });
     
     carouselContainer.addEventListener('touchmove', (e) => {
@@ -1062,10 +1136,12 @@ document.addEventListener('DOMContentLoaded', function() {
       handleSwipe();
       isSwiping = false;
       
-      // Resume auto-slide after touch
-      autoSlide = setInterval(() => {
-        navigateNext();
-      }, 2750);
+      // Resume auto-slide after touch if carousel is active
+      if (carouselActivated) {
+        autoSlide = setInterval(() => {
+          navigateNext();
+        }, 2750);
+      }
     }, { passive: true });
     
     function handleSwipe() {
@@ -1077,35 +1153,6 @@ document.addEventListener('DOMContentLoaded', function() {
         navigatePrev();
       }
     }
-  
-    // Auto-slide every 2.75 seconds
-    let autoSlide = setInterval(() => {
-      navigateNext();
-    }, 2750);
-  
-    // Pause when hovering on any slide
-    carouselContainer.addEventListener('mouseenter', () => {
-      clearInterval(autoSlide);
-    });
-    
-    carouselContainer.addEventListener('mouseleave', () => {
-      clearInterval(autoSlide);
-      autoSlide = setInterval(() => {
-        navigateNext();
-      }, 2750);
-    });
-    
-    // Pause on focus (accessibility)
-    carouselContainer.addEventListener('focusin', () => {
-      clearInterval(autoSlide);
-    });
-  
-    carouselContainer.addEventListener('focusout', () => {
-      clearInterval(autoSlide);
-      autoSlide = setInterval(() => {
-        navigateNext();
-      }, 2750);
-    });
     
     // Handle resize and orientation changes
     let resizeTimeout;

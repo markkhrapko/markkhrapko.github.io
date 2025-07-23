@@ -479,14 +479,37 @@ strong, b {
   position: relative;
 }
 
-/* Carousel caption */
-.carousel-caption {
-  font-size: 0.8rem;
-  color: #888;
-  text-align: center;
-  margin: 0 0 1rem 0;
-  letter-spacing: 0.1em;
+/* Carousel overlay */
+.carousel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.5s ease-out;
+  pointer-events: none;
+}
+
+.carousel-container.active .carousel-overlay {
+  opacity: 0;
+}
+
+.carousel-overlay-text {
+  color: #fff;
+  font-size: 1.2rem;
+  letter-spacing: 0.2em;
   font-weight: 300;
+  text-align: center;
+  transition: opacity 0.3s ease-out;
+}
+
+.carousel-container.active .carousel-overlay-text {
+  opacity: 0;
 }
 
 /* Carousel container */
