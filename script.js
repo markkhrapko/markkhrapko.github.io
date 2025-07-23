@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Version control and cleanup
-    const CURRENT_VERSION = '2.0';
+    const CURRENT_VERSION = '2.1';
     const storedVersion = localStorage.getItem('siteVersion');
     
     // If version changed or doesn't exist, clean up old data
@@ -415,6 +415,118 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('curseParticleCount', totalParticlesAdded.toString());
     });
     
+    // Neurogenic burst button handler
+    const burstButton = document.getElementById('neurogenic-burst');
+    if (burstButton) {
+      burstButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        if (!window.pJSDom || !window.pJSDom[0] || !window.pJSDom[0].pJS) return;
+        
+        const pJS = window.pJSDom[0].pJS;
+        const existingParticles = pJS.particles.array.slice(); // Copy existing particles
+        const minParticles = 50; // Minimum particles for a good burst effect
+        
+        // Calculate how many new particles to create
+        const currentCount = existingParticles.length;
+        const particlesToCreate = Math.max(minParticles - currentCount, 20); // At least 20 new ones
+        
+        // Create new particles at random positions
+        for (let i = 0; i < particlesToCreate; i++) {
+          const x = Math.random() * window.innerWidth;
+          const y = Math.random() * window.innerHeight;
+          addParticleAtPosition(x, y);
+        }
+        
+        // Now scatter ALL particles (existing + new) with high velocity
+        setTimeout(() => {
+          const allParticles = pJS.particles.array;
+          
+          allParticles.forEach(particle => {
+            // Random explosion direction and force
+            const angle = Math.random() * Math.PI * 2;
+            const force = 8 + Math.random() * 12; // Very high velocity
+            
+            particle.vx = Math.cos(angle) * force;
+            particle.vy = Math.sin(angle) * force;
+            
+            // Reset any investigation states
+            const state = particleStates.get(particle);
+            if (state) {
+              state.investigating = false;
+              state.excitementLevel = 1; // Max excitement
+              state.chaosTimer = 0;
+            }
+          });
+          
+          // Gradually slow down particles over time
+          let decaySteps = 0;
+          const decayInterval = setInterval(() => {
+            decaySteps++;
+            
+            allParticles.forEach(particle => {
+              // Exponential decay of velocity
+              particle.vx *= 0.92;
+              particle.vy *= 0.92;
+              
+              // Add some randomness as they slow
+              if (decaySteps > 10) {
+                particle.vx += (Math.random() - 0.5) * 0.5;
+                particle.vy += (Math.random() - 0.5) * 0.5;
+              }
+            });
+            
+            // Stop after sufficient decay
+            if (decaySteps > 30) {
+              clearInterval(decayInterval);
+              
+              // Reset excitement levels
+              allParticles.forEach(particle => {
+                const state = particleStates.get(particle);
+                if (state) {
+                  state.excitementLevel = 0;
+                }
+              });
+            }
+          }, 100);
+          
+          // Update particle count
+          totalParticlesAdded = allParticles.length;
+          localStorage.setItem('curseParticleCount', totalParticlesAdded.toString());
+        }, 50); // Small delay to ensure particles are created
+      });
+    }
+    
+    // Glymphatic flush button glow timing
+    const glymphaticButton = document.getElementById('reset-curse');
+    let glowCount = 0;
+    
+    // First glow after 13 seconds
+    setTimeout(() => {
+      if (glymphaticButton && glowCount < 2) {
+        glymphaticButton.classList.add('glow');
+        glowCount++;
+        
+        // Remove glow class after animation completes
+        setTimeout(() => {
+          glymphaticButton.classList.remove('glow');
+        }, 1500);
+      }
+    }, 13000);
+    
+    // Second glow after 23 seconds total (13 + 10)
+    setTimeout(() => {
+      if (glymphaticButton && glowCount < 2) {
+        glymphaticButton.classList.add('glow');
+        glowCount++;
+        
+        // Remove glow class after animation completes
+        setTimeout(() => {
+          glymphaticButton.classList.remove('glow');
+        }, 1500);
+      }
+    }, 23000);
+    
     // Neural resonance - particles react to mouse movement
     let mouseX = 0;
     let mouseY = 0;
@@ -730,88 +842,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   
-    // Neurogenic burst button handler
-    const burstButton = document.getElementById('neurogenic-burst');
-    if (burstButton) {
-      burstButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        
-        if (!window.pJSDom || !window.pJSDom[0] || !window.pJSDom[0].pJS) return;
-        
-        const pJS = window.pJSDom[0].pJS;
-        const existingParticles = pJS.particles.array.slice(); // Copy existing particles
-        const minParticles = 50; // Minimum particles for a good burst effect
-        
-        // Calculate how many new particles to create
-        const currentCount = existingParticles.length;
-        const particlesToCreate = Math.max(minParticles - currentCount, 20); // At least 20 new ones
-        
-        // Create new particles at random positions
-        for (let i = 0; i < particlesToCreate; i++) {
-          const x = Math.random() * window.innerWidth;
-          const y = Math.random() * window.innerHeight;
-          addParticleAtPosition(x, y);
-        }
-        
-        // Now scatter ALL particles (existing + new) with high velocity
-        setTimeout(() => {
-          const allParticles = pJS.particles.array;
-          
-          allParticles.forEach(particle => {
-            // Random explosion direction and force
-            const angle = Math.random() * Math.PI * 2;
-            const force = 8 + Math.random() * 12; // Very high velocity
-            
-            particle.vx = Math.cos(angle) * force;
-            particle.vy = Math.sin(angle) * force;
-            
-            // Reset any investigation states
-            const state = particleStates.get(particle);
-            if (state) {
-              state.investigating = false;
-              state.excitementLevel = 1; // Max excitement
-              state.chaosTimer = 0;
-            }
-          });
-          
-          // Gradually slow down particles over time
-          let decaySteps = 0;
-          const decayInterval = setInterval(() => {
-            decaySteps++;
-            
-            allParticles.forEach(particle => {
-              // Exponential decay of velocity
-              particle.vx *= 0.92;
-              particle.vy *= 0.92;
-              
-              // Add some randomness as they slow
-              if (decaySteps > 10) {
-                particle.vx += (Math.random() - 0.5) * 0.5;
-                particle.vy += (Math.random() - 0.5) * 0.5;
-              }
-            });
-            
-            // Stop after sufficient decay
-            if (decaySteps > 30) {
-              clearInterval(decayInterval);
-              
-              // Reset excitement levels
-              allParticles.forEach(particle => {
-                const state = particleStates.get(particle);
-                if (state) {
-                  state.excitementLevel = 0;
-                }
-              });
-            }
-          }, 100);
-          
-          // Update particle count
-          totalParticlesAdded = allParticles.length;
-          localStorage.setItem('curseParticleCount', totalParticlesAdded.toString());
-        }, 50); // Small delay to ensure particles are created
-      });
-    }
-  
     // CAROUSEL with centered hero layout
     const track = document.querySelector('.carousel-track');
     const slides = Array.from(track.querySelectorAll('.slide'));
@@ -873,8 +903,9 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Calculate offset to center the active slide
       const containerWidth = carouselContainer.offsetWidth;
-      const slideWidth = 360;
-      const gap = 16;
+      const isMobile = window.innerWidth <= 600;
+      const slideWidth = isMobile ? 280 : 360;
+      const gap = isMobile ? 8 : 16;
       
       // Calculate position to center active slide
       const centerOffset = (containerWidth - slideWidth) / 2;
@@ -926,8 +957,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (allSlides[trackIndex + 1]) allSlides[trackIndex + 1].classList.add('next');
         
         const containerWidth = carouselContainer.offsetWidth;
-        const slideWidth = 360;
-        const gap = 16;
+        const isMobile = window.innerWidth <= 600;
+        const slideWidth = isMobile ? 280 : 360;
+        const gap = isMobile ? 8 : 16;
         const centerOffset = (containerWidth - slideWidth) / 2;
         const slideOffset = trackIndex * (slideWidth + gap);
         const finalOffset = centerOffset - slideOffset;
@@ -953,8 +985,9 @@ document.addEventListener('DOMContentLoaded', function() {
         allSlides[trackIndex + 1].classList.add('next');
         
         const containerWidth = carouselContainer.offsetWidth;
-        const slideWidth = 360;
-        const gap = 16;
+        const isMobile = window.innerWidth <= 600;
+        const slideWidth = isMobile ? 280 : 360;
+        const gap = isMobile ? 8 : 16;
         const centerOffset = (containerWidth - slideWidth) / 2;
         const slideOffset = trackIndex * (slideWidth + gap);
         const finalOffset = centerOffset - slideOffset;
@@ -999,21 +1032,44 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
     
-    // Touch/swipe support for mobile
+    // Touch/swipe support for mobile with improved handling
     let touchStartX = 0;
     let touchEndX = 0;
+    let isSwiping = false;
     
     carouselContainer.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
+      isSwiping = true;
+      // Pause auto-slide during touch
+      clearInterval(autoSlide);
     }, { passive: true });
+    
+    carouselContainer.addEventListener('touchmove', (e) => {
+      if (!isSwiping) return;
+      
+      // Optional: Add visual feedback during swipe
+      const currentX = e.changedTouches[0].screenX;
+      const diff = currentX - touchStartX;
+      
+      // Prevent vertical scrolling while swiping horizontally
+      if (Math.abs(diff) > 10) {
+        e.preventDefault();
+      }
+    }, { passive: false });
     
     carouselContainer.addEventListener('touchend', (e) => {
       touchEndX = e.changedTouches[0].screenX;
       handleSwipe();
+      isSwiping = false;
+      
+      // Resume auto-slide after touch
+      autoSlide = setInterval(() => {
+        navigateNext();
+      }, 2750);
     }, { passive: true });
     
     function handleSwipe() {
-      const swipeThreshold = 50;
+      const swipeThreshold = 30; // Lower threshold for easier swiping
       if (touchEndX < touchStartX - swipeThreshold) {
         navigateNext();
       }
@@ -1051,6 +1107,16 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 2750);
     });
     
+    // Handle resize and orientation changes
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Recalculate positions on resize
+        goToSlide(currentIndex, true);
+      }, 250);
+    });
+    
     // Expandable sections
     const expandableSections = document.querySelectorAll('.engrams-title.expandable');
     console.log('Found expandable sections:', expandableSections.length);
@@ -1077,7 +1143,7 @@ document.addEventListener('DOMContentLoaded', function() {
               const tagline = document.getElementById('friends-tagline');
               const friendsList = document.getElementById('friends-list');
               const text1 = "Every one of these people has shaped how I think and who I've become.";
-              const text2 = "They are incredible!";
+              const text2 = "They are incredible.";
               
               // Clear any existing content
               tagline.textContent = '';
