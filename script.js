@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Version control and cleanup
-    const CURRENT_VERSION = '2.1';
+    const CURRENT_VERSION = '2.2';
     const storedVersion = localStorage.getItem('siteVersion');
     
     // If version changed or doesn't exist, clean up old data
@@ -918,8 +918,9 @@ document.addEventListener('DOMContentLoaded', function() {
       // Calculate offset to center the active slide
       const containerWidth = carouselContainer.offsetWidth;
       const isMobile = window.innerWidth <= 600;
-      const slideWidth = isMobile ? 280 : 360;
-      const gap = isMobile ? 8 : 16;
+      // On mobile, use viewport width for slide width
+      const slideWidth = isMobile ? window.innerWidth * 0.85 : 360;
+      const gap = isMobile ? window.innerWidth * 0.025 : 16;
       
       // Calculate position to center active slide
       const centerOffset = (containerWidth - slideWidth) / 2;
@@ -972,8 +973,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const containerWidth = carouselContainer.offsetWidth;
         const isMobile = window.innerWidth <= 600;
-        const slideWidth = isMobile ? 280 : 360;
-        const gap = isMobile ? 8 : 16;
+        const slideWidth = isMobile ? window.innerWidth * 0.85 : 360;
+        const gap = isMobile ? window.innerWidth * 0.025 : 16;
         const centerOffset = (containerWidth - slideWidth) / 2;
         const slideOffset = trackIndex * (slideWidth + gap);
         const finalOffset = centerOffset - slideOffset;
@@ -1000,8 +1001,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const containerWidth = carouselContainer.offsetWidth;
         const isMobile = window.innerWidth <= 600;
-        const slideWidth = isMobile ? 280 : 360;
-        const gap = isMobile ? 8 : 16;
+        const slideWidth = isMobile ? window.innerWidth * 0.85 : 360;
+        const gap = isMobile ? window.innerWidth * 0.025 : 16;
         const centerOffset = (containerWidth - slideWidth) / 2;
         const slideOffset = trackIndex * (slideWidth + gap);
         const finalOffset = centerOffset - slideOffset;
@@ -1114,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', function() {
       activateCarousel();
       // Pause auto-slide during touch
       if (autoSlide) {
-        clearInterval(autoSlide);
+      clearInterval(autoSlide);
       }
     }, { passive: true });
     

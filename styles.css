@@ -671,33 +671,41 @@ strong, b {
   
   /* Carousel mobile optimizations */
   .carousel-section {
-    margin: 3rem 0 3rem 0;
+    margin: 2rem 0 4rem 0; /* Reduced top margin, increased bottom for dots */
+    position: relative;
   }
   
   .carousel-container {
     height: 200px;
     margin: 0;
-    /* Enable horizontal scrolling as fallback */
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    overflow: hidden; /* Changed from auto to hidden to prevent scrollbar */
+    position: relative;
   }
   
+  /* Remove scroll snap on mobile to prevent conflicts */
   .carousel-track {
-    /* Ensure track is wide enough for all slides */
-    width: max-content;
+    width: auto;
+    scroll-snap-type: none;
   }
   
   .slide {
-    flex: 0 0 280px; /* Larger for better visibility on mobile */
+    flex: 0 0 85vw; /* Use viewport width for better mobile scaling */
     height: 180px;
-    margin: 0 0.5rem;
-    scroll-snap-align: center;
+    margin: 0 2.5vw;
+    scroll-snap-align: none;
   }
   
-  /* Ensure active slide is visible on mobile */
+  /* Ensure active slide is centered and visible on mobile */
   .slide.active {
     transform: scale(1) translateZ(0); /* Don't scale up on mobile */
+    opacity: 1;
+  }
+  
+  /* Adjust opacity for prev/next slides on mobile */
+  .slide.prev,
+  .slide.next {
+    opacity: 0.6;
+    transform: scale(0.9) translateZ(0);
   }
   
   /* Hide gradient overlays on mobile for better visibility */
@@ -706,15 +714,30 @@ strong, b {
     display: none;
   }
   
-  /* Navigation dots more touch-friendly */
+  /* Fix navigation dots positioning on mobile */
   .carousel-nav {
-    margin-top: 1.5rem;
+    position: relative; /* Changed from absolute */
+    bottom: auto;
+    margin-top: 1rem;
+    left: 0;
+    transform: none;
+    justify-content: center;
   }
   
   .carousel-dot {
-    width: 10px;
-    height: 10px;
-    margin: 0 6px;
+    width: 8px;
+    height: 8px;
+    margin: 0 4px;
+  }
+  
+  .carousel-dot.active {
+    width: 16px;
+  }
+  
+  /* Hide overlay text on very small screens */
+  .carousel-overlay-text {
+    font-size: 1rem;
+    padding: 0 1rem;
   }
   
   /* Expandable sections mobile friendly */
@@ -799,10 +822,16 @@ strong, b {
   }
   
   /* Improve touch targets */
-  a, button, .expandable {
+  a, button {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+  }
+  
+  /* Fix expandable sections touch target */
+  .expandable {
+    display: block;
+    padding: 0.5rem 0;
   }
   
   /* Fix z-index issues on mobile */
@@ -810,9 +839,31 @@ strong, b {
     z-index: 100;
   }
   
-  /* Ensure slides don't overflow */
+  /* Ensure slides don't overflow and prevent drag */
+  .slide {
+    -webkit-user-drag: none;
+    user-drag: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
   .slide img {
-    pointer-events: none; /* Prevent image drag on mobile */
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+  }
+  
+  /* Fix carousel centering on mobile */
+  .carousel-container {
+    -webkit-transform: translateZ(0); /* Force hardware acceleration */
+    transform: translateZ(0);
+  }
+  
+  /* Ensure overlay works on mobile */
+  .carousel-overlay {
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
   }
 }
 
