@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Version control and cleanup
-    const CURRENT_VERSION = '2.2';
+    const CURRENT_VERSION = '2.3';
     const storedVersion = localStorage.getItem('siteVersion');
     
     // If version changed or doesn't exist, clean up old data
@@ -918,12 +918,20 @@ document.addEventListener('DOMContentLoaded', function() {
       // Calculate offset to center the active slide
       const containerWidth = carouselContainer.offsetWidth;
       const isMobile = window.innerWidth <= 600;
-      // On mobile, use viewport width for slide width
-      const slideWidth = isMobile ? window.innerWidth * 0.85 : 360;
-      const gap = isMobile ? window.innerWidth * 0.025 : 16;
+      
+      // Use fixed pixel values on mobile to prevent accumulation errors
+      let slideWidth, gap;
+      if (isMobile) {
+        // Calculate actual slide width from CSS (85vw)
+        slideWidth = Math.floor(window.innerWidth * 0.85);
+        gap = Math.floor(window.innerWidth * 0.025);
+      } else {
+        slideWidth = 360;
+        gap = 16;
+      }
       
       // Calculate position to center active slide
-      const centerOffset = (containerWidth - slideWidth) / 2;
+      const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
       const slideOffset = trackIndex * (slideWidth + gap);
       const finalOffset = centerOffset - slideOffset;
       
@@ -948,15 +956,51 @@ document.addEventListener('DOMContentLoaded', function() {
       // If we're on the last clone (showing first image), jump to real first
       if (currentIndex === 0 && trackIndex === numSlides + 1) {
         setTimeout(() => {
+          track.style.transition = 'none';
           trackIndex = 1;
-          goToSlide(0, true);
+          
+          // Recalculate position for mobile
+          const containerWidth = carouselContainer.offsetWidth;
+          const isMobile = window.innerWidth <= 600;
+          const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
+          const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
+          const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
+          const slideOffset = trackIndex * (slideWidth + gap);
+          const finalOffset = centerOffset - slideOffset;
+          
+          track.style.transform = `translateX(${finalOffset}px)`;
+          
+          // Force reflow
+          track.offsetHeight;
+          
+          setTimeout(() => {
+            track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+          }, 20);
         }, 500);
       }
       // If we're on the first clone (showing last image), jump to real last
       else if (currentIndex === numSlides - 1 && trackIndex === 0) {
         setTimeout(() => {
+          track.style.transition = 'none';
           trackIndex = numSlides;
-          goToSlide(numSlides - 1, true);
+          
+          // Recalculate position for mobile
+          const containerWidth = carouselContainer.offsetWidth;
+          const isMobile = window.innerWidth <= 600;
+          const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
+          const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
+          const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
+          const slideOffset = trackIndex * (slideWidth + gap);
+          const finalOffset = centerOffset - slideOffset;
+          
+          track.style.transform = `translateX(${finalOffset}px)`;
+          
+          // Force reflow
+          track.offsetHeight;
+          
+          setTimeout(() => {
+            track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+          }, 20);
         }, 500);
       }
     }
@@ -973,9 +1017,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const containerWidth = carouselContainer.offsetWidth;
         const isMobile = window.innerWidth <= 600;
-        const slideWidth = isMobile ? window.innerWidth * 0.85 : 360;
-        const gap = isMobile ? window.innerWidth * 0.025 : 16;
-        const centerOffset = (containerWidth - slideWidth) / 2;
+        const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
+        const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
+        const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
         const slideOffset = trackIndex * (slideWidth + gap);
         const finalOffset = centerOffset - slideOffset;
         track.style.transform = `translateX(${finalOffset}px)`;
@@ -1001,9 +1045,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const containerWidth = carouselContainer.offsetWidth;
         const isMobile = window.innerWidth <= 600;
-        const slideWidth = isMobile ? window.innerWidth * 0.85 : 360;
-        const gap = isMobile ? window.innerWidth * 0.025 : 16;
-        const centerOffset = (containerWidth - slideWidth) / 2;
+        const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
+        const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
+        const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
         const slideOffset = trackIndex * (slideWidth + gap);
         const finalOffset = centerOffset - slideOffset;
         track.style.transform = `translateX(${finalOffset}px)`;

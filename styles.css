@@ -676,7 +676,7 @@ strong, b {
   }
   
   .carousel-container {
-    height: 200px;
+    height: 220px; /* Slightly taller for better aspect ratio */
     margin: 0;
     overflow: hidden; /* Changed from auto to hidden to prevent scrollbar */
     position: relative;
@@ -686,13 +686,28 @@ strong, b {
   .carousel-track {
     width: auto;
     scroll-snap-type: none;
+    /* Ensure proper height alignment */
+    height: 100%;
+    align-items: center;
   }
   
   .slide {
     flex: 0 0 85vw; /* Use viewport width for better mobile scaling */
-    height: 180px;
+    height: 200px; /* Fixed height to prevent stretching */
     margin: 0 2.5vw;
     scroll-snap-align: none;
+    /* Ensure aspect ratio is maintained */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Fix image stretching on mobile */
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Changed from cover to contain to prevent stretching */
+    background-color: #000; /* Add background for letterboxing */
   }
   
   /* Ensure active slide is centered and visible on mobile */
@@ -706,6 +721,11 @@ strong, b {
   .slide.next {
     opacity: 0.6;
     transform: scale(0.9) translateZ(0);
+  }
+  
+  /* Non-active slides on mobile */
+  .slide:not(.active):not(.prev):not(.next) {
+    opacity: 0.3;
   }
   
   /* Hide gradient overlays on mobile for better visibility */
@@ -864,6 +884,18 @@ strong, b {
   .carousel-overlay {
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
+  }
+}
+
+/* Carousel overlay mobile adjustments */
+.carousel-overlay {
+  background: rgba(0, 0, 0, 0.5); /* Lighter overlay on mobile */
+}
+
+/* Alternative object-fit for portrait images on mobile */
+@media (max-aspect-ratio: 1/1) {
+  .slide img {
+    object-fit: cover; /* Use cover for portrait screens */
   }
 }
 
