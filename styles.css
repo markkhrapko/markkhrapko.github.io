@@ -671,69 +671,49 @@ strong, b {
   
   /* Carousel mobile optimizations */
   .carousel-section {
-    margin: 2rem 0 4rem 0;
+    margin: 2rem 0 4rem 0; /* Reduced top margin, increased bottom for dots */
     position: relative;
   }
   
   .carousel-container {
-    height: 220px;
+    height: 200px;
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; /* Changed from auto to hidden to prevent scrollbar */
     position: relative;
-    width: 100vw;
-    left: 50%;
-    transform: translateX(-50%);
   }
   
-  /* Mobile carousel track */
+  /* Remove scroll snap on mobile to prevent conflicts */
   .carousel-track {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    /* Start with first slide centered */
-    padding-left: 7.5vw; /* (100vw - 85vw) / 2 */
+    width: auto;
+    scroll-snap-type: none;
+    /* Ensure smooth rendering */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
   }
   
   .slide {
-    flex: 0 0 85vw;
-    height: 200px;
-    margin-right: 2.5vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.3;
-    transform: scale(0.9);
-    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    flex: 0 0 85%; /* Use percentage instead of viewport units for stability */
+    height: 180px;
+    margin: 0 2.5%;
+    scroll-snap-align: none;
+    /* Force consistent rendering */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
   
-  /* Last slide no margin */
-  .slide:last-child {
-    margin-right: 7.5vw; /* Match padding-left for symmetry */
-  }
-  
-  /* Active slide styling */
+  /* Ensure active slide is centered and visible on mobile */
   .slide.active {
+    transform: scale(1) translateZ(0); /* Don't scale up on mobile */
     opacity: 1;
-    transform: scale(1);
   }
   
-  /* Adjacent slides */
+  /* Adjust opacity for prev/next slides on mobile */
   .slide.prev,
   .slide.next {
     opacity: 0.6;
-    transform: scale(0.95);
+    transform: scale(0.9) translateZ(0);
   }
-  
-  /* Fix image display on mobile */
-  .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 4px;
-  }
-  
-
   
   /* Hide gradient overlays on mobile for better visibility */
   .carousel-container::before,
@@ -891,18 +871,6 @@ strong, b {
   .carousel-overlay {
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
-  }
-}
-
-/* Carousel overlay mobile adjustments */
-.carousel-overlay {
-  background: rgba(0, 0, 0, 0.5); /* Lighter overlay on mobile */
-}
-
-/* Alternative object-fit for portrait images on mobile */
-@media (max-aspect-ratio: 1/1) {
-  .slide img {
-    object-fit: cover; /* Use cover for portrait screens */
   }
 }
 

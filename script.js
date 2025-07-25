@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Version control and cleanup
-    const CURRENT_VERSION = '2.4';
+    const CURRENT_VERSION = '2.3';
     const storedVersion = localStorage.getItem('siteVersion');
     
     // If version changed or doesn't exist, clean up old data
@@ -858,123 +858,10 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // CAROUSEL with centered hero layout
     const track = document.querySelector('.carousel-track');
-    const slides = Array.from(document.querySelectorAll('.slide'));
+    const slides = Array.from(track.querySelectorAll('.slide'));
     const nav = document.querySelector('.carousel-nav');
     const carouselContainer = document.querySelector('.carousel-container');
-    
-    if (!track || slides.length === 0) return;
-    
-    // Check if mobile
-    const isMobileDevice = () => window.innerWidth <= 600;
-    
-    // Mobile carousel implementation
-    if (isMobileDevice()) {
-      // For mobile, use a simpler transform-based approach
-      let currentIndex = 0;
-      const numSlides = slides.length;
-      
-      // Create navigation dots
-      slides.forEach((_, index) => {
-        const dot = document.createElement('button');
-        dot.classList.add('carousel-dot');
-        if (index === 0) dot.classList.add('active');
-        dot.addEventListener('click', (e) => {
-          e.stopPropagation();
-          goToSlideMobile(index);
-        });
-        nav.appendChild(dot);
-      });
-      
-      const dots = nav.querySelectorAll('.carousel-dot');
-      
-      // Mobile-specific slide navigation
-      function goToSlideMobile(index) {
-        // Remove all state classes
-        slides.forEach(slide => {
-          slide.classList.remove('active', 'prev', 'next');
-        });
-        dots[currentIndex].classList.remove('active');
-        
-        currentIndex = index;
-        
-        // Add state classes
-        slides[currentIndex].classList.add('active');
-        dots[currentIndex].classList.add('active');
-        
-        // Add prev/next classes
-        if (currentIndex > 0) slides[currentIndex - 1].classList.add('prev');
-        if (currentIndex < numSlides - 1) slides[currentIndex + 1].classList.add('next');
-        
-        // Simple transform calculation for mobile
-        const slideWidth = 85; // 85vw as set in CSS
-        const gap = 2.5; // 2.5vw as set in CSS
-        const offset = -currentIndex * (slideWidth + gap);
-        
-        track.style.transform = `translateX(${offset}vw)`;
-      }
-      
-      // Initialize
-      goToSlideMobile(0);
-      
-      // Touch/swipe support
-      let touchStartX = 0;
-      let touchEndX = 0;
-      
-      carouselContainer.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        activateCarousel();
-      }, { passive: true });
-      
-      carouselContainer.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        
-        if (Math.abs(diff) > 50) {
-          if (diff > 0 && currentIndex < numSlides - 1) {
-            goToSlideMobile(currentIndex + 1);
-          } else if (diff < 0 && currentIndex > 0) {
-            goToSlideMobile(currentIndex - 1);
-          }
-        }
-      }, { passive: true });
-      
-      // Carousel activation
-      let carouselActivated = false;
-      let autoSlide = null;
-      
-      function activateCarousel() {
-        if (!carouselActivated) {
-          carouselActivated = true;
-          carouselContainer.classList.add('active');
-          
-          autoSlide = setInterval(() => {
-            const nextIndex = (currentIndex + 1) % numSlides;
-            goToSlideMobile(nextIndex);
-          }, 2750);
-        }
-      }
-      
-      // Activate on first touch
-      carouselContainer.addEventListener('touchstart', () => {
-        activateCarousel();
-        if (autoSlide) clearInterval(autoSlide);
-      }, { passive: true });
-      
-      // Resume auto-slide after touch
-      carouselContainer.addEventListener('touchend', () => {
-        if (carouselActivated && autoSlide) {
-          clearInterval(autoSlide);
-          autoSlide = setInterval(() => {
-            const nextIndex = (currentIndex + 1) % numSlides;
-            goToSlideMobile(nextIndex);
-          }, 2750);
-        }
-      }, { passive: true });
-      
-      return; // Exit here for mobile
-    }
-    
-    // DESKTOP CAROUSEL IMPLEMENTATION (existing code)
+  
     // Clone first and last slides for infinite loop
     const firstClone = slides[0].cloneNode(true);
     const lastClone = slides[slides.length - 1].cloneNode(true);
@@ -1004,6 +891,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     const dots = nav.querySelectorAll('.carousel-dot');
+    
+    // Function to get consistent slide dimensions
+    function getSlideDimensions() {
+      const isMobile = window.innerWidth <= 600;
+      
+      if (isMobile) {
+        // Get actual computed width from first slide for consistency
+        const firstSlide = slides[0];
+        const computedStyle = window.getComputedStyle(firstSlide);
+        const slideWidth = firstSlide.offsetWidth;
+        const marginLeft = parseFloat(computedStyle.marginLeft);
+        const marginRight = parseFloat(computedStyle.marginRight);
+        const totalGap = marginLeft + marginRight;
+        
+        return {
+          slideWidth: slideWidth,
+          gap: totalGap,
+          isMobile: true
+        };
+      } else {
+        return {
+          slideWidth: 360,
+          gap: 16,
+          isMobile: false
+        };
+      }
+    }
   
     // Go to specific slide
     function goToSlide(index, instant = false) {
@@ -1028,26 +942,13 @@ document.addEventListener('DOMContentLoaded', function() {
       allSlides[trackIndex - 1].classList.add('prev');
       allSlides[trackIndex + 1].classList.add('next');
       
-      // Calculate offset to center the active slide
+      // Get consistent dimensions
+      const dims = getSlideDimensions();
       const containerWidth = carouselContainer.offsetWidth;
-      const isMobile = window.innerWidth <= 600;
-      
-      // Use fixed pixel values on mobile to prevent accumulation errors
-      let slideWidth, gap;
-      if (isMobile) {
-        // Calculate actual slide width from CSS (85vw)
-        slideWidth = Math.floor(window.innerWidth * 0.85);
-        gap = Math.floor(window.innerWidth * 0.025);
-      } else {
-        slideWidth = 360;
-        gap = 16;
-      }
       
       // Calculate position to center active slide
-      // For mobile, use window.innerWidth instead of containerWidth to ensure proper centering
-      const viewportWidth = isMobile ? window.innerWidth : containerWidth;
-      const centerOffset = Math.floor((viewportWidth - slideWidth) / 2);
-      const slideOffset = trackIndex * (slideWidth + gap);
+      const centerOffset = (containerWidth - dims.slideWidth) / 2;
+      const slideOffset = trackIndex * (dims.slideWidth + dims.gap);
       const finalOffset = centerOffset - slideOffset;
       
       if (instant) {
@@ -1056,7 +957,8 @@ document.addEventListener('DOMContentLoaded', function() {
         track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
       }
       
-      track.style.transform = `translateX(${finalOffset}px)`;
+      // Use rounded values to prevent accumulation of decimal errors
+      track.style.transform = `translateX(${Math.round(finalOffset)}px)`;
       
       // Reset position if we're on a clone
       if (instant) {
@@ -1071,53 +973,15 @@ document.addEventListener('DOMContentLoaded', function() {
       // If we're on the last clone (showing first image), jump to real first
       if (currentIndex === 0 && trackIndex === numSlides + 1) {
         setTimeout(() => {
-          track.style.transition = 'none';
           trackIndex = 1;
-          
-          // Recalculate position for mobile
-          const containerWidth = carouselContainer.offsetWidth;
-          const isMobile = window.innerWidth <= 600;
-          const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
-          const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
-          const viewportWidth = isMobile ? window.innerWidth : containerWidth;
-          const centerOffset = Math.floor((viewportWidth - slideWidth) / 2);
-          const slideOffset = trackIndex * (slideWidth + gap);
-          const finalOffset = centerOffset - slideOffset;
-          
-          track.style.transform = `translateX(${finalOffset}px)`;
-          
-          // Force reflow
-          track.offsetHeight;
-          
-          setTimeout(() => {
-            track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-          }, 20);
+          goToSlide(0, true);
         }, 500);
       }
       // If we're on the first clone (showing last image), jump to real last
       else if (currentIndex === numSlides - 1 && trackIndex === 0) {
         setTimeout(() => {
-          track.style.transition = 'none';
           trackIndex = numSlides;
-          
-          // Recalculate position for mobile
-          const containerWidth = carouselContainer.offsetWidth;
-          const isMobile = window.innerWidth <= 600;
-          const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
-          const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
-          const viewportWidth = isMobile ? window.innerWidth : containerWidth;
-          const centerOffset = Math.floor((viewportWidth - slideWidth) / 2);
-          const slideOffset = trackIndex * (slideWidth + gap);
-          const finalOffset = centerOffset - slideOffset;
-          
-          track.style.transform = `translateX(${finalOffset}px)`;
-          
-          // Force reflow
-          track.offsetHeight;
-          
-          setTimeout(() => {
-            track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-          }, 20);
+          goToSlide(numSlides - 1, true);
         }, 500);
       }
     }
@@ -1132,15 +996,12 @@ document.addEventListener('DOMContentLoaded', function() {
         allSlides[trackIndex - 1].classList.add('prev');
         if (allSlides[trackIndex + 1]) allSlides[trackIndex + 1].classList.add('next');
         
+        const dims = getSlideDimensions();
         const containerWidth = carouselContainer.offsetWidth;
-        const isMobile = window.innerWidth <= 600;
-        const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
-        const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
-        const viewportWidth = isMobile ? window.innerWidth : containerWidth;
-        const centerOffset = Math.floor((viewportWidth - slideWidth) / 2);
-        const slideOffset = trackIndex * (slideWidth + gap);
+        const centerOffset = (containerWidth - dims.slideWidth) / 2;
+        const slideOffset = trackIndex * (dims.slideWidth + dims.gap);
         const finalOffset = centerOffset - slideOffset;
-        track.style.transform = `translateX(${finalOffset}px)`;
+        track.style.transform = `translateX(${Math.round(finalOffset)}px)`;
         
         currentIndex = 0;
         dots[numSlides - 1].classList.remove('active');
@@ -1161,15 +1022,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (allSlides[trackIndex - 1]) allSlides[trackIndex - 1].classList.add('prev');
         allSlides[trackIndex + 1].classList.add('next');
         
+        const dims = getSlideDimensions();
         const containerWidth = carouselContainer.offsetWidth;
-        const isMobile = window.innerWidth <= 600;
-        const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
-        const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
-        const viewportWidth = isMobile ? window.innerWidth : containerWidth;
-        const centerOffset = Math.floor((viewportWidth - slideWidth) / 2);
-        const slideOffset = trackIndex * (slideWidth + gap);
+        const centerOffset = (containerWidth - dims.slideWidth) / 2;
+        const slideOffset = trackIndex * (dims.slideWidth + dims.gap);
         const finalOffset = centerOffset - slideOffset;
-        track.style.transform = `translateX(${finalOffset}px)`;
+        track.style.transform = `translateX(${Math.round(finalOffset)}px)`;
         
         currentIndex = numSlides - 1;
         dots[0].classList.remove('active');
@@ -1187,6 +1045,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Carousel activation state
     let carouselActivated = false;
     let autoSlide = null;
+    
+    // Periodic recalibration to prevent drift on mobile
+    if (window.innerWidth <= 600) {
+      setInterval(() => {
+        if (carouselActivated) {
+          // Silently recalibrate position without animation
+          const dims = getSlideDimensions();
+          const containerWidth = carouselContainer.offsetWidth;
+          const centerOffset = (containerWidth - dims.slideWidth) / 2;
+          const slideOffset = trackIndex * (dims.slideWidth + dims.gap);
+          const finalOffset = centerOffset - slideOffset;
+          
+          // Only update if there's a significant drift (more than 2px)
+          const currentTransform = track.style.transform;
+          const currentOffset = parseFloat(currentTransform.match(/translateX\(([-\d.]+)px\)/)?.[1] || 0);
+          
+          if (Math.abs(currentOffset - Math.round(finalOffset)) > 2) {
+            track.style.transform = `translateX(${Math.round(finalOffset)}px)`;
+          }
+        }
+      }, 5000); // Check every 5 seconds
+    }
     
     // Function to activate carousel
     function activateCarousel() {
@@ -1323,8 +1203,10 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        // Recalculate positions on resize
-        goToSlide(currentIndex, true);
+        // Force recalculation of positions on resize
+        // Use instant transition to prevent jarring movement
+        const savedIndex = currentIndex;
+        goToSlide(savedIndex, true);
       }, 250);
     });
     
