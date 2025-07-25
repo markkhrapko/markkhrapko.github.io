@@ -677,38 +677,29 @@ strong, b {
   
   .carousel-container {
     height: 220px; /* Slightly taller for better aspect ratio */
-    width: 100vw; /* Full viewport width */
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; /* Changed from auto to hidden to prevent scrollbar */
     position: relative;
-    /* Remove any padding that might affect width */
-    padding: 0;
-    box-sizing: border-box;
   }
   
   /* Remove scroll snap on mobile to prevent conflicts */
   .carousel-track {
-    display: flex;
     width: auto;
     scroll-snap-type: none;
     /* Ensure proper height alignment */
     height: 100%;
     align-items: center;
-    /* Important: no gaps between flex items */
-    gap: 0;
   }
   
   .slide {
-    flex: 0 0 85vw; /* Use viewport width for consistent sizing */
-    width: 85vw; /* Explicit width for consistency */
+    flex: 0 0 85vw; /* Use viewport width for better mobile scaling */
     height: 200px; /* Fixed height to prevent stretching */
-    margin: 0 2.5vw; /* This creates 5vw total gap between slides */
+    margin: 0 2.5vw;
     scroll-snap-align: none;
     /* Ensure aspect ratio is maintained */
     display: flex;
     align-items: center;
     justify-content: center;
-    box-sizing: border-box;
   }
   
   /* Fix image stretching on mobile */
