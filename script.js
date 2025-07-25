@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Version control and cleanup
-    const CURRENT_VERSION = '2.3';
+    const CURRENT_VERSION = '2.4';
     const storedVersion = localStorage.getItem('siteVersion');
     
     // If version changed or doesn't exist, clean up old data
@@ -858,10 +858,123 @@ document.addEventListener('DOMContentLoaded', function() {
   
     // CAROUSEL with centered hero layout
     const track = document.querySelector('.carousel-track');
-    const slides = Array.from(track.querySelectorAll('.slide'));
+    const slides = Array.from(document.querySelectorAll('.slide'));
     const nav = document.querySelector('.carousel-nav');
     const carouselContainer = document.querySelector('.carousel-container');
-  
+    
+    if (!track || slides.length === 0) return;
+    
+    // Check if mobile
+    const isMobileDevice = () => window.innerWidth <= 600;
+    
+    // Mobile carousel implementation
+    if (isMobileDevice()) {
+      // For mobile, use a simpler transform-based approach
+      let currentIndex = 0;
+      const numSlides = slides.length;
+      
+      // Create navigation dots
+      slides.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.classList.add('carousel-dot');
+        if (index === 0) dot.classList.add('active');
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          goToSlideMobile(index);
+        });
+        nav.appendChild(dot);
+      });
+      
+      const dots = nav.querySelectorAll('.carousel-dot');
+      
+      // Mobile-specific slide navigation
+      function goToSlideMobile(index) {
+        // Remove all state classes
+        slides.forEach(slide => {
+          slide.classList.remove('active', 'prev', 'next');
+        });
+        dots[currentIndex].classList.remove('active');
+        
+        currentIndex = index;
+        
+        // Add state classes
+        slides[currentIndex].classList.add('active');
+        dots[currentIndex].classList.add('active');
+        
+        // Add prev/next classes
+        if (currentIndex > 0) slides[currentIndex - 1].classList.add('prev');
+        if (currentIndex < numSlides - 1) slides[currentIndex + 1].classList.add('next');
+        
+        // Simple transform calculation for mobile
+        const slideWidth = 85; // 85vw as set in CSS
+        const gap = 2.5; // 2.5vw as set in CSS
+        const offset = -currentIndex * (slideWidth + gap);
+        
+        track.style.transform = `translateX(${offset}vw)`;
+      }
+      
+      // Initialize
+      goToSlideMobile(0);
+      
+      // Touch/swipe support
+      let touchStartX = 0;
+      let touchEndX = 0;
+      
+      carouselContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        activateCarousel();
+      }, { passive: true });
+      
+      carouselContainer.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > 50) {
+          if (diff > 0 && currentIndex < numSlides - 1) {
+            goToSlideMobile(currentIndex + 1);
+          } else if (diff < 0 && currentIndex > 0) {
+            goToSlideMobile(currentIndex - 1);
+          }
+        }
+      }, { passive: true });
+      
+      // Carousel activation
+      let carouselActivated = false;
+      let autoSlide = null;
+      
+      function activateCarousel() {
+        if (!carouselActivated) {
+          carouselActivated = true;
+          carouselContainer.classList.add('active');
+          
+          autoSlide = setInterval(() => {
+            const nextIndex = (currentIndex + 1) % numSlides;
+            goToSlideMobile(nextIndex);
+          }, 2750);
+        }
+      }
+      
+      // Activate on first touch
+      carouselContainer.addEventListener('touchstart', () => {
+        activateCarousel();
+        if (autoSlide) clearInterval(autoSlide);
+      }, { passive: true });
+      
+      // Resume auto-slide after touch
+      carouselContainer.addEventListener('touchend', () => {
+        if (carouselActivated && autoSlide) {
+          clearInterval(autoSlide);
+          autoSlide = setInterval(() => {
+            const nextIndex = (currentIndex + 1) % numSlides;
+            goToSlideMobile(nextIndex);
+          }, 2750);
+        }
+      }, { passive: true });
+      
+      return; // Exit here for mobile
+    }
+    
+    // DESKTOP CAROUSEL IMPLEMENTATION (existing code)
     // Clone first and last slides for infinite loop
     const firstClone = slides[0].cloneNode(true);
     const lastClone = slides[slides.length - 1].cloneNode(true);
