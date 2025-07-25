@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Version control and cleanup
-    const CURRENT_VERSION = '2.3';
+    const CURRENT_VERSION = '2.4';
     const storedVersion = localStorage.getItem('siteVersion');
     
     // If version changed or doesn't exist, clean up old data
@@ -919,21 +919,24 @@ document.addEventListener('DOMContentLoaded', function() {
       const containerWidth = carouselContainer.offsetWidth;
       const isMobile = window.innerWidth <= 600;
       
-      // Use fixed pixel values on mobile to prevent accumulation errors
-      let slideWidth, gap;
-      if (isMobile) {
-        // Calculate actual slide width from CSS (85vw)
-        slideWidth = Math.floor(window.innerWidth * 0.85);
-        gap = Math.floor(window.innerWidth * 0.025);
-      } else {
-        slideWidth = 360;
-        gap = 16;
+      // Get actual slide dimensions from the DOM for accuracy
+      const activeSlide = allSlides[trackIndex];
+      const slideWidth = activeSlide.offsetWidth;
+      
+      // Calculate the total offset needed
+      let totalOffset = 0;
+      for (let i = 0; i < trackIndex; i++) {
+        totalOffset += allSlides[i].offsetWidth;
+        // Add gap if not the last slide counted
+        if (i < trackIndex - 1) {
+          const gap = isMobile ? Math.floor(window.innerWidth * 0.05) : 16;
+          totalOffset += gap;
+        }
       }
       
-      // Calculate position to center active slide
+      // Center the active slide
       const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
-      const slideOffset = trackIndex * (slideWidth + gap);
-      const finalOffset = centerOffset - slideOffset;
+      const finalOffset = centerOffset - totalOffset;
       
       if (instant) {
         track.style.transition = 'none';
@@ -959,14 +962,15 @@ document.addEventListener('DOMContentLoaded', function() {
           track.style.transition = 'none';
           trackIndex = 1;
           
-          // Recalculate position for mobile
+          // Recalculate position using actual dimensions
           const containerWidth = carouselContainer.offsetWidth;
-          const isMobile = window.innerWidth <= 600;
-          const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
-          const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
+          const slideWidth = allSlides[trackIndex].offsetWidth;
           const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
-          const slideOffset = trackIndex * (slideWidth + gap);
-          const finalOffset = centerOffset - slideOffset;
+          
+          // Only one slide before (the clone at index 0)
+          const gap = window.innerWidth <= 600 ? Math.floor(window.innerWidth * 0.05) : 16;
+          const totalOffset = allSlides[0].offsetWidth + gap;
+          const finalOffset = centerOffset - totalOffset;
           
           track.style.transform = `translateX(${finalOffset}px)`;
           
@@ -984,14 +988,23 @@ document.addEventListener('DOMContentLoaded', function() {
           track.style.transition = 'none';
           trackIndex = numSlides;
           
-          // Recalculate position for mobile
+          // Recalculate position using actual dimensions
           const containerWidth = carouselContainer.offsetWidth;
           const isMobile = window.innerWidth <= 600;
-          const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
-          const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
+          
+          // Calculate total offset for all slides before the last real slide
+          let totalOffset = 0;
+          for (let i = 0; i < trackIndex; i++) {
+            totalOffset += allSlides[i].offsetWidth;
+            if (i < trackIndex - 1) {
+              const gap = isMobile ? Math.floor(window.innerWidth * 0.05) : 16;
+              totalOffset += gap;
+            }
+          }
+          
+          const slideWidth = allSlides[trackIndex].offsetWidth;
           const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
-          const slideOffset = trackIndex * (slideWidth + gap);
-          const finalOffset = centerOffset - slideOffset;
+          const finalOffset = centerOffset - totalOffset;
           
           track.style.transform = `translateX(${finalOffset}px)`;
           
@@ -1017,11 +1030,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const containerWidth = carouselContainer.offsetWidth;
         const isMobile = window.innerWidth <= 600;
-        const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
-        const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
+        
+        // Calculate actual offset using slide dimensions
+        let totalOffset = 0;
+        for (let i = 0; i < trackIndex; i++) {
+          totalOffset += allSlides[i].offsetWidth;
+          if (i < trackIndex - 1) {
+            const gap = isMobile ? Math.floor(window.innerWidth * 0.05) : 16;
+            totalOffset += gap;
+          }
+        }
+        
+        const slideWidth = allSlides[trackIndex].offsetWidth;
         const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
-        const slideOffset = trackIndex * (slideWidth + gap);
-        const finalOffset = centerOffset - slideOffset;
+        const finalOffset = centerOffset - totalOffset;
         track.style.transform = `translateX(${finalOffset}px)`;
         
         currentIndex = 0;
@@ -1030,7 +1052,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         handleInfiniteLoop();
       } else {
-      goToSlide(currentIndex + 1);
+        goToSlide(currentIndex + 1);
       }
     }
     
@@ -1045,11 +1067,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const containerWidth = carouselContainer.offsetWidth;
         const isMobile = window.innerWidth <= 600;
-        const slideWidth = isMobile ? Math.floor(window.innerWidth * 0.85) : 360;
-        const gap = isMobile ? Math.floor(window.innerWidth * 0.025) : 16;
+        
+        // Since we're at index 0, no offset needed
+        const slideWidth = allSlides[trackIndex].offsetWidth;
         const centerOffset = Math.floor((containerWidth - slideWidth) / 2);
-        const slideOffset = trackIndex * (slideWidth + gap);
-        const finalOffset = centerOffset - slideOffset;
+        const finalOffset = centerOffset; // No slides before to offset
         track.style.transform = `translateX(${finalOffset}px)`;
         
         currentIndex = numSlides - 1;
