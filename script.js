@@ -1214,10 +1214,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const expandableSections = document.querySelectorAll('.engrams-title.expandable');
     console.log('Found expandable sections:', expandableSections.length);
     
+    // Flag to track if friends section is animating
+    let friendsAnimating = false;
+    
     expandableSections.forEach(section => {
       section.addEventListener('click', function() {
         console.log('Section clicked:', this.textContent);
         const parentSection = this.closest('.engrams-section');
+        
+        // Special check for friends section
+        if (this.classList.contains('friends-title') && friendsAnimating) {
+          // Ignore clicks while animating
+          return;
+        }
+        
         parentSection.classList.toggle('expanded');
         const content = this.nextElementSibling;
         
@@ -1228,6 +1238,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Special handling for friends section
             if (this.classList.contains('friends-title')) {
+              // Set animating flag
+              friendsAnimating = true;
+              
               // Reset first shuffle flag and trigger first-time shuffle interval when section opens
               firstShuffle = true;
               startRearrangeInterval(true);
@@ -1238,10 +1251,18 @@ document.addEventListener('DOMContentLoaded', function() {
               const text1 = "Every one of these people has shaped how I think and who I've become.";
               const text2 = "They are incredible.";
               
-              // Clear any existing content
+              // Clear any existing content and intervals
               tagline.textContent = '';
               tagline.classList.remove('typing');
               friendsList.classList.remove('fade-in');
+              
+              // Clear any existing typewriter intervals
+              if (window.friendsTypeInterval) {
+                clearInterval(window.friendsTypeInterval);
+              }
+              if (window.friendsTypeInterval2) {
+                clearInterval(window.friendsTypeInterval2);
+              }
               
               // Start typing after a short delay
               setTimeout(() => {
@@ -1250,14 +1271,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 let currentText = text1;
                 let isSecondLine = false;
                 
-                const typeInterval = setInterval(() => {
+                window.friendsTypeInterval = setInterval(() => {
                   if (index < currentText.length) {
                     tagline.textContent += currentText[index];
                     index++;
                   } else if (!isSecondLine) {
                     // Add line break and pause before second line
                     tagline.innerHTML += '<br>';
-                    clearInterval(typeInterval);
+                    clearInterval(window.friendsTypeInterval);
                     
                     // Pause for 800ms before typing second line
                     setTimeout(() => {
@@ -1266,18 +1287,20 @@ document.addEventListener('DOMContentLoaded', function() {
                       isSecondLine = true;
                       
                       // Resume typing
-                      const typeInterval2 = setInterval(() => {
+                      window.friendsTypeInterval2 = setInterval(() => {
                         if (index < currentText.length) {
                           tagline.innerHTML += currentText[index];
                           index++;
                         } else {
                           // Typing complete - keep the typing class for cursor
-                          clearInterval(typeInterval2);
+                          clearInterval(window.friendsTypeInterval2);
                           // Don't remove typing class to keep content visible
                           
                           // Fade in all friends together after typing completes
                           setTimeout(() => {
                             friendsList.classList.add('fade-in');
+                            // Reset animating flag after all animations complete
+                            friendsAnimating = false;
                           }, 500);
                         }
                       }, 30); // Faster typing speed
@@ -1297,6 +1320,15 @@ document.addEventListener('DOMContentLoaded', function() {
               tagline.textContent = '';
               tagline.classList.remove('typing');
               friendsList.classList.remove('fade-in');
+              // Clear any running intervals
+              if (window.friendsTypeInterval) {
+                clearInterval(window.friendsTypeInterval);
+              }
+              if (window.friendsTypeInterval2) {
+                clearInterval(window.friendsTypeInterval2);
+              }
+              // Reset animating flag
+              friendsAnimating = false;
             }
           }
         }
