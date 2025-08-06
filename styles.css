@@ -63,6 +63,33 @@ main p:first-child {
   letter-spacing: 0.01em;
 }
 
+/* Orbit link styling */
+.orbit-link {
+  color: #c0c0c0; /* Same as the rest of the text */
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.orbit-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: #c0c0c0;
+  transition: width 0.3s ease;
+}
+
+.orbit-link:hover {
+  color: #e0e0e0;
+}
+
+.orbit-link:hover::after {
+  width: 100%;
+}
+
 /* Tagline styling */
 .tagline {
   font-size: 0.8125rem; /* Refined size */
@@ -515,7 +542,7 @@ strong, b {
 /* Carousel container */
 .carousel-container {
   position: relative;
-  overflow: hidden;
+  overflow: hidden; 
   height: 320px; /* Increased from 280px */
   margin: 0 -2rem; /* Slight negative margin for better visual */
 }
