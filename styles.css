@@ -117,14 +117,7 @@ header {
   color: #f5f5f5; /* Slightly off-white for softness */
 }
 
-/* Make h1 look identical to previous span */
-.logo h1 {
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  letter-spacing: inherit;
-  font-weight: 400;
-}
+/* Remove special h1 styling (reverted to span) */
 nav {
   display: flex;
   gap: 1rem;
