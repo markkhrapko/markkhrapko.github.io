@@ -576,8 +576,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const pJS = window.pJSDom[0].pJS;
       const count = pJS.particles.array.length;
       // Thresholds with hysteresis to avoid flicker
-      const highThreshold = 120; // start urgent glow above this
-      const lowThreshold = 80;   // stop urgent glow below this
+      const highThreshold = 250; // start urgent glow above this
+      const lowThreshold = 240;   // stop urgent glow below this
       const isUrgent = glymphaticButton.classList.contains('glow-urgent');
       if (!isUrgent && count >= highThreshold) {
         glymphaticButton.classList.add('glow-urgent');
