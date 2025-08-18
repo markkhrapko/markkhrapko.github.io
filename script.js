@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const friendsList = document.getElementById('friends-list');
     let isHoveringFriend = false;
     let rearrangeInterval;
+    let isFriendsVisible = false; // track on-screen visibility
     
     // Function to shuffle friends
     function shuffleFriends(smooth = false) {
@@ -111,7 +112,30 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initial shuffle on page load
     shuffleFriends(false);
-    
+
+    // Visibility observer for friends section
+    const friendsSectionEl = document.getElementById('friends-section');
+    if (friendsSectionEl && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          isFriendsVisible = entry.isIntersecting && entry.intersectionRatio > 0.15;
+        });
+      }, { threshold: [0, 0.15, 0.3, 1] });
+      observer.observe(friendsSectionEl);
+    } else {
+      // Fallback: assume visible
+      isFriendsVisible = true;
+    }
+
+    // Pause shuffling when tab not visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState !== 'visible') {
+        clearInterval(rearrangeInterval);
+      } else {
+        if (typeof startRearrangeInterval === 'function') startRearrangeInterval(false);
+      }
+    });
+
     // Set up hover tracking for the friends list links
     if (friendsList) {
       // Initial attachment of hover listeners
@@ -127,8 +151,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         rearrangeInterval = setInterval(() => {
           const friendsSection = document.getElementById('friends-section');
-          // Only rearrange if the friends section is expanded and visible
-          if (friendsSection && friendsSection.classList.contains('expanded')) {
+          // Only rearrange if the section is expanded, actually visible on screen, and tab is visible
+          if (
+            friendsSection &&
+            friendsSection.classList.contains('expanded') &&
+            isFriendsVisible &&
+            document.visibilityState === 'visible'
+          ) {
             shuffleFriends(true);
             
             // After the first shuffle, switch to 8 second intervals

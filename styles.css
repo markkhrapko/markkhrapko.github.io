@@ -121,8 +121,24 @@ nav {
   gap: 1rem;
   align-items: center;
 }
-nav a:hover svg {
+nav a:hover svg,
+nav a:focus-visible svg {
   stroke: #ccc;
+}
+
+/* Subtle underline on focus for header icons */
+nav a:focus-visible {
+  outline: none;
+  position: relative;
+}
+nav a:focus-visible::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: #666;
 }
 
 /* Remove divider styles */
