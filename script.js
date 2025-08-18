@@ -570,6 +570,25 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }, 23000);
     
+    // Urgent glow when particle count is high
+    function updateUrgentGlow() {
+      if (!glymphaticButton || !window.pJSDom || !window.pJSDom[0] || !window.pJSDom[0].pJS) return;
+      const pJS = window.pJSDom[0].pJS;
+      const count = pJS.particles.array.length;
+      // Thresholds with hysteresis to avoid flicker
+      const highThreshold = 120; // start urgent glow above this
+      const lowThreshold = 80;   // stop urgent glow below this
+      const isUrgent = glymphaticButton.classList.contains('glow-urgent');
+      if (!isUrgent && count >= highThreshold) {
+        glymphaticButton.classList.add('glow-urgent');
+      } else if (isUrgent && count <= lowThreshold) {
+        glymphaticButton.classList.remove('glow-urgent');
+      }
+    }
+
+    // Check particle count periodically
+    setInterval(updateUrgentGlow, 1000);
+
     // Neural resonance - particles react to mouse movement
     let mouseX = 0;
     let mouseY = 0;
