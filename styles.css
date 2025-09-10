@@ -33,10 +33,17 @@ input, textarea {
 /* Particles behind everything */
 #particles-js {
   position: fixed;
-  top: 0; left: 0;
+  top: 0; 
+  left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
+  /* Mobile scroll fix - force hardware acceleration */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 /* Links */
@@ -861,10 +868,16 @@ strong, b {
   
   /* Particle canvas mobile optimization */
   #particles-js {
+    position: fixed !important;
     width: 100vw !important;
     height: 100vh !important;
+    height: 100dvh !important; /* Dynamic viewport height for mobile */
     left: 0 !important;
     right: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
   }
   
   /* Ensure proper text wrapping */
