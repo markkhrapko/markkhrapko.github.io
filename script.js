@@ -1,24 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Version control and cleanup
-    const CURRENT_VERSION = '2.3';
+    const CURRENT_VERSION = '3.0';
     const storedVersion = localStorage.getItem('siteVersion');
     
     // If version changed or doesn't exist, clean up old data
     if (storedVersion !== CURRENT_VERSION) {
-      console.log('New version detected, cleaning up old data...');
       
-      // Clear specific items that might cause issues
       localStorage.removeItem('curseParticleCount');
       
-      // If you want to clear everything except certain items:
-      // const itemsToKeep = ['userPreference1', 'userPreference2'];
-      // Object.keys(localStorage).forEach(key => {
-      //   if (!itemsToKeep.includes(key) && key !== 'siteVersion') {
-      //     localStorage.removeItem(key);
-      //   }
-      // });
-      
-      // Update version
       localStorage.setItem('siteVersion', CURRENT_VERSION);
       
       // Force reload to ensure fresh assets
@@ -27,154 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Global variables for friends list shuffling
-    let firstShuffle = true;
-    
-    // Randomize friends list order
-    const friendsList = document.getElementById('friends-list');
-    let isHoveringFriend = false;
-    let rearrangeInterval;
-    let isFriendsVisible = false; // track on-screen visibility
-    
-    // Function to shuffle friends
-    function shuffleFriends(smooth = false) {
-      // For the first shuffle after opening, ignore hover state
-      if (!friendsList || (!firstShuffle && isHoveringFriend)) return;
-      
-      const friends = Array.from(friendsList.children);
-      if (friends.length === 0) return;
-      
-      // Create a copy of the array to shuffle
-      const shuffled = [...friends];
-      
-      // Fisher-Yates shuffle algorithm
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      
-      // Check if the order actually changed
-      const orderChanged = shuffled.some((friend, index) => friend !== friends[index]);
-      if (!orderChanged && smooth) {
-        // If order didn't change, try again
-        shuffleFriends(smooth);
-        return;
-      }
-      
-      if (smooth) {
-        // Add transition for smooth rearrangement
-        friends.forEach((friend) => {
-          friend.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-          friend.style.transform = 'scale(0.95)';
-          friend.style.opacity = '0.6';
-        });
-        
-        setTimeout(() => {
-          // Clear and re-append in new order
-          friendsList.innerHTML = '';
-          shuffled.forEach((friend, index) => {
-            friendsList.appendChild(friend);
-            // Reset styles with delay for staggered effect
-            setTimeout(() => {
-              friend.style.transform = 'scale(1)';
-              friend.style.opacity = '1';
-            }, index * 60);
-          });
-          
-          // Re-attach hover listeners after DOM manipulation
-          attachHoverListeners();
-        }, 200);
-      } else {
-        // Initial load - no animation
-        friendsList.innerHTML = '';
-        shuffled.forEach(friend => friendsList.appendChild(friend));
-        attachHoverListeners();
-      }
-    }
-    
-    // Function to attach hover listeners to individual friend links
-    function attachHoverListeners() {
-      if (!friendsList) return;
-      
-      // Get all links and spans within the friends list
-      const friendElements = friendsList.querySelectorAll('a, span.no-link');
-      
-      friendElements.forEach(element => {
-        element.addEventListener('mouseenter', () => {
-          isHoveringFriend = true;
-        });
-        
-        element.addEventListener('mouseleave', () => {
-          isHoveringFriend = false;
-        });
-      });
-    }
-    
-    // Initial shuffle on page load
-    shuffleFriends(false);
-
-    // Visibility observer for friends section
-    const friendsSectionEl = document.getElementById('friends-section');
-    if (friendsSectionEl && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          isFriendsVisible = entry.isIntersecting && entry.intersectionRatio > 0.15;
-        });
-      }, { threshold: [0, 0.15, 0.3, 1] });
-      observer.observe(friendsSectionEl);
-    } else {
-      // Fallback: assume visible
-      isFriendsVisible = true;
-    }
-
-    // Pause shuffling when tab not visible
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState !== 'visible') {
-        clearInterval(rearrangeInterval);
-      } else {
-        if (typeof startRearrangeInterval === 'function') startRearrangeInterval(false);
-      }
-    });
-
-    // Set up hover tracking for the friends list links
-    if (friendsList) {
-      // Initial attachment of hover listeners
-      attachHoverListeners();
-      
-      // Function to start the rearrange interval
-      function startRearrangeInterval(firstTime = false) {
-        clearInterval(rearrangeInterval);
-        firstShuffle = firstTime;
-        
-        // Use 3 seconds for the first shuffle after opening, 8 seconds thereafter
-        const interval = firstTime ? 3000 : 8000;
-        
-        rearrangeInterval = setInterval(() => {
-          const friendsSection = document.getElementById('friends-section');
-          // Only rearrange if the section is expanded, actually visible on screen, and tab is visible
-          if (
-            friendsSection &&
-            friendsSection.classList.contains('expanded') &&
-            isFriendsVisible &&
-            document.visibilityState === 'visible'
-          ) {
-            shuffleFriends(true);
-            
-            // After the first shuffle, switch to 8 second intervals
-            if (firstTime) {
-              firstShuffle = false;
-              clearInterval(rearrangeInterval);
-              startRearrangeInterval(false);
-            }
-          }
-        }, interval);
-      }
-      
-      // Start the interval
-      startRearrangeInterval();
-    }
-    
-    // CURSE PARTICLE SYSTEM
+    // PARTICLE SYSTEM
     // Load saved particle count from localStorage
     let savedCount = parseInt(localStorage.getItem('curseParticleCount') || '0');
     let isInitialized = false;
@@ -1129,15 +971,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Activate carousel on first interaction
+    // Auto-activate carousel after 2 seconds
+    setTimeout(() => {
+      activateCarousel();
+    }, 2000);
+    
+    // Activate + pause auto-slide on hover
     carouselContainer.addEventListener('mouseenter', () => {
       activateCarousel();
-    });
-    
-
-    
-    // Pause auto-slide when hovering (after activation)
-    carouselContainer.addEventListener('mouseenter', () => {
       if (autoSlide) {
         clearInterval(autoSlide);
       }
@@ -1258,129 +1099,5 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 250);
     });
     
-    // Expandable sections
-    const expandableSections = document.querySelectorAll('.engrams-title.expandable');
-    console.log('Found expandable sections:', expandableSections.length);
-    
-    // Flag to track if friends section is animating
-    let friendsAnimating = false;
-    
-    expandableSections.forEach(section => {
-      section.addEventListener('click', function() {
-        console.log('Section clicked:', this.textContent);
-        const parentSection = this.closest('.engrams-section');
-        
-        // Special check for friends section
-        if (this.classList.contains('friends-title') && friendsAnimating) {
-          // Ignore clicks while animating
-          return;
-        }
-        
-        parentSection.classList.toggle('expanded');
-        const content = this.nextElementSibling;
-        
-        if (content) {
-          if (parentSection.classList.contains('expanded')) {
-            content.style.height = content.scrollHeight + 'px';
-            content.style.opacity = '1';
-            
-            // Special handling for friends section
-            if (this.classList.contains('friends-title')) {
-              // Set animating flag
-              friendsAnimating = true;
-              
-              // Reset first shuffle flag and trigger first-time shuffle interval when section opens
-              firstShuffle = true;
-              startRearrangeInterval(true);
-              
-              // Start typewriter effect
-              const tagline = document.getElementById('friends-tagline');
-              const friendsList = document.getElementById('friends-list');
-              const text1 = "Every one of these people has shaped how I think and who I've become.";
-              const text2 = "They are incredible.";
-              
-              // Clear any existing content and intervals
-              tagline.textContent = '';
-              tagline.classList.remove('typing');
-              friendsList.classList.remove('fade-in');
-              
-              // Clear any existing typewriter intervals
-              if (window.friendsTypeInterval) {
-                clearInterval(window.friendsTypeInterval);
-              }
-              if (window.friendsTypeInterval2) {
-                clearInterval(window.friendsTypeInterval2);
-              }
-              
-              // Start typing after a short delay
-              setTimeout(() => {
-                tagline.classList.add('typing');
-                let index = 0;
-                let currentText = text1;
-                let isSecondLine = false;
-                
-                window.friendsTypeInterval = setInterval(() => {
-                  if (index < currentText.length) {
-                    tagline.textContent += currentText[index];
-                    index++;
-                  } else if (!isSecondLine) {
-                    // Add line break and pause before second line
-                    tagline.innerHTML += '<br>';
-                    clearInterval(window.friendsTypeInterval);
-                    
-                    // Pause for 800ms before typing second line
-                    setTimeout(() => {
-                      currentText = text2;
-                      index = 0;
-                      isSecondLine = true;
-                      
-                      // Resume typing
-                      window.friendsTypeInterval2 = setInterval(() => {
-                        if (index < currentText.length) {
-                          tagline.innerHTML += currentText[index];
-                          index++;
-                        } else {
-                          // Typing complete - keep the typing class for cursor
-                          clearInterval(window.friendsTypeInterval2);
-                          // Don't remove typing class to keep content visible
-                          
-                          // Fade in all friends together after typing completes
-                          setTimeout(() => {
-                            friendsList.classList.add('fade-in');
-                            // Reset animating flag after all animations complete
-                            friendsAnimating = false;
-                          }, 500);
-                        }
-                      }, 30); // Faster typing speed
-                    }, 800); // Pause duration
-                  }
-                }, 30); // Faster typing speed (30ms per character)
-              }, 300);
-            }
-          } else {
-            content.style.height = '0';
-            content.style.opacity = '0';
-            
-            // Reset friends section if closing
-            if (this.classList.contains('friends-title')) {
-              const tagline = document.getElementById('friends-tagline');
-              const friendsList = document.getElementById('friends-list');
-              tagline.textContent = '';
-              tagline.classList.remove('typing');
-              friendsList.classList.remove('fade-in');
-              // Clear any running intervals
-              if (window.friendsTypeInterval) {
-                clearInterval(window.friendsTypeInterval);
-              }
-              if (window.friendsTypeInterval2) {
-                clearInterval(window.friendsTypeInterval2);
-              }
-              // Reset animating flag
-              friendsAnimating = false;
-            }
-          }
-        }
-      });
-    });
   });
   
