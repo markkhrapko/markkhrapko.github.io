@@ -214,8 +214,8 @@ strong, b {
 .carousel-container {
   position: relative;
   overflow: hidden; 
-  height: 432px;
-  margin: 0 -2rem;
+  height: 416px;
+  margin: 0 -3rem;
 }
 
 .carousel-track {
@@ -229,9 +229,9 @@ strong, b {
 /* Centered hero slides */
 .slide {
   position: relative;
-  flex: 0 0 486px;
-  height: 378px;
-  margin: 0 0.7rem;
+  flex: 0 0 468px;
+  height: 364px;
+  margin: 0 0.5rem;
   transition: all 0.9s cubic-bezier(0.3, 0, 0.1, 1); /* Match track timing */
   opacity: 0.3;
   transform: scale(0.8) translateZ(0);
@@ -358,9 +358,9 @@ strong, b {
   }
   
   .carousel-container {
-    height: 270px;
+    height: 200px;
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; /* Changed from auto to hidden to prevent scrollbar */
     position: relative;
   }
   
@@ -375,8 +375,8 @@ strong, b {
   }
   
   .slide {
-    flex: 0 0 85%;
-    height: 243px;
+    flex: 0 0 85%; /* Use percentage instead of viewport units for stability */
+    height: 180px;
     margin: 0 2.5%;
     scroll-snap-align: none;
     /* Force consistent rendering */

@@ -802,8 +802,8 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       } else {
         return {
-          slideWidth: 486,
-          gap: 22,
+          slideWidth: 468,
+          gap: 16,
           isMobile: false
         };
       }
