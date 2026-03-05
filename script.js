@@ -802,7 +802,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       } else {
         return {
-          slideWidth: 420,
+          slideWidth: 360,
           gap: 16,
           isMobile: false
         };
