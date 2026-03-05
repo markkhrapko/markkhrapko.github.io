@@ -210,24 +210,6 @@ strong, b {
   position: relative;
 }
 
-/* Carousel overlay */
-.carousel-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 10;
-  transition: opacity 1.2s ease-out;
-  pointer-events: none;
-}
-
-.carousel-container.active .carousel-overlay {
-  opacity: 0;
-}
-
-
 /* Carousel container */
 .carousel-container {
   position: relative;
@@ -512,11 +494,6 @@ strong, b {
     transform: translateZ(0);
   }
   
-  /* Ensure overlay works on mobile */
-  .carousel-overlay {
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
-  }
 }
 
 /* Glymphatic flush button glow animation */

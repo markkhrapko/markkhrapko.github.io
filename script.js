@@ -932,81 +932,52 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize first slide
     goToSlide(0);
     
-    // Carousel activation state
-    let carouselActivated = false;
     let autoSlide = null;
     
     // Periodic recalibration to prevent drift on mobile
     if (window.innerWidth <= 600) {
       setInterval(() => {
-        if (carouselActivated) {
-          // Silently recalibrate position without animation
-          const dims = getSlideDimensions();
-          const containerWidth = carouselContainer.offsetWidth;
-          const centerOffset = (containerWidth - dims.slideWidth) / 2;
-          const slideOffset = trackIndex * (dims.slideWidth + dims.gap);
-          const finalOffset = centerOffset - slideOffset;
-          
-          // Only update if there's a significant drift (more than 2px)
-          const currentTransform = track.style.transform;
-          const currentOffset = parseFloat(currentTransform.match(/translateX\(([-\d.]+)px\)/)?.[1] || 0);
-          
-          if (Math.abs(currentOffset - Math.round(finalOffset)) > 2) {
-            track.style.transform = `translateX(${Math.round(finalOffset)}px)`;
-          }
-        }
-      }, 5000); // Check every 5 seconds
-    }
-    
-    // Function to activate carousel
-    function activateCarousel() {
-      if (!carouselActivated) {
-        carouselActivated = true;
-        carouselContainer.classList.add('active');
+        const dims = getSlideDimensions();
+        const containerWidth = carouselContainer.offsetWidth;
+        const centerOffset = (containerWidth - dims.slideWidth) / 2;
+        const slideOffset = trackIndex * (dims.slideWidth + dims.gap);
+        const finalOffset = centerOffset - slideOffset;
         
-        // Start auto-slide after activation
-        autoSlide = setInterval(() => {
-          navigateNext();
-        }, 2750);
-      }
+        const currentTransform = track.style.transform;
+        const currentOffset = parseFloat(currentTransform.match(/translateX\(([-\d.]+)px\)/)?.[1] || 0);
+        
+        if (Math.abs(currentOffset - Math.round(finalOffset)) > 2) {
+          track.style.transform = `translateX(${Math.round(finalOffset)}px)`;
+        }
+      }, 5000);
     }
     
-    // Auto-activate carousel after 2 seconds
-    setTimeout(() => {
-      activateCarousel();
-    }, 2000);
+    function startAutoSlide() {
+      clearInterval(autoSlide);
+      autoSlide = setInterval(() => {
+        navigateNext();
+      }, 2750);
+    }
     
-    // Activate + pause auto-slide on hover
+    // First image stays for 3 seconds, then auto-advance begins
+    setTimeout(startAutoSlide, 3000);
+    
+    // Pause auto-slide on hover, resume on leave
     carouselContainer.addEventListener('mouseenter', () => {
-      activateCarousel();
-      if (autoSlide) {
-        clearInterval(autoSlide);
-      }
+      clearInterval(autoSlide);
     });
     
     carouselContainer.addEventListener('mouseleave', () => {
-      if (carouselActivated && autoSlide) {
-        clearInterval(autoSlide);
-        autoSlide = setInterval(() => {
-          navigateNext();
-        }, 2750);
-      }
+      startAutoSlide();
     });
     
     // Pause on focus (accessibility)
     carouselContainer.addEventListener('focusin', () => {
-      if (autoSlide) {
-        clearInterval(autoSlide);
-      }
+      clearInterval(autoSlide);
     });
   
     carouselContainer.addEventListener('focusout', () => {
-      if (carouselActivated) {
-        clearInterval(autoSlide);
-        autoSlide = setInterval(() => {
-          navigateNext();
-        }, 2750);
-      }
+      startAutoSlide();
     });
     
     // Keyboard navigation
@@ -1043,12 +1014,7 @@ document.addEventListener('DOMContentLoaded', function() {
     carouselContainer.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
       isSwiping = true;
-      // Activate carousel on touch if not already active
-      activateCarousel();
-      // Pause auto-slide during touch
-      if (autoSlide) {
       clearInterval(autoSlide);
-      }
     }, { passive: true });
     
     carouselContainer.addEventListener('touchmove', (e) => {
@@ -1068,13 +1034,7 @@ document.addEventListener('DOMContentLoaded', function() {
       touchEndX = e.changedTouches[0].screenX;
       handleSwipe();
       isSwiping = false;
-      
-      // Resume auto-slide after touch if carousel is active
-      if (carouselActivated) {
-        autoSlide = setInterval(() => {
-          navigateNext();
-        }, 2750);
-      }
+      startAutoSlide();
     }, { passive: true });
     
     function handleSwipe() {
