@@ -1,11 +1,20 @@
 /* BODY */
 body {
-  font-family: "Montserrat", serif;
+  font-family: "Montserrat", -apple-system, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.6;
   color: #fff;
   background-color: rgb(30, 30, 30);
   margin: 0;
   padding: 6rem 0 5rem 0;
+  /* the page is a canvas to click on — no accidental blue selection */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
 }
 
 /* Container */
@@ -88,7 +97,7 @@ main p:first-child {
 /* Tagline styling */
 .tagline {
   font-size: 0.8125rem; /* Refined size */
-  color: #808080; /* Medium grey */
+  color: #9a9a9a; /* Medium grey, AA contrast on #1e1e1e */
   font-style: normal; /* Remove italic for cleaner look */
   font-weight: 400;
   letter-spacing: 0.015em;
@@ -106,6 +115,7 @@ header {
   margin-bottom: 0.75rem; /* Reduced from 2.5rem to bring name and role closer */
 }
 .logo {
+  margin: 0; /* reset h1 default */
   font-size: 1.125rem; /* Slightly larger */
   letter-spacing: 0.02em; /* Subtle spacing for elegance */
   font-weight: 400; /* Regular weight for sophistication */
@@ -151,38 +161,41 @@ nav a:focus-visible::after {
   flex-direction: column;
   gap: 0.5rem;
   align-items: flex-end;
+  /* hidden until the visitor discovers the field by clicking;
+     visibility keeps the buttons out of the tab order while invisible */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 1.2s ease, visibility 0s linear 1.2s;
 }
 
-#reset-curse, #neurogenic-burst {
+.glymphatic-container.revealed {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 1.2s ease;
+}
+
+#reset-curse {
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #666;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: #5f5f5f;
   padding: 0.5rem 1rem;
-  font-family: 'Montserrat', serif;
+  font-family: "Montserrat", -apple-system, "Helvetica Neue", Arial, sans-serif;
   font-size: 0.75rem;
   font-weight: 300;
   letter-spacing: 0.05em;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   border-radius: 2px;
   text-transform: lowercase;
   position: relative;
 }
 
-#reset-curse:hover, #neurogenic-burst:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #999;
-  transform: translateY(-2px);
-}
-
-#neurogenic-burst {
-  color: #777;
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-#neurogenic-burst:hover {
-  color: #aaa;
-  border-color: rgba(255, 255, 255, 0.3);
+#reset-curse:hover {
+  border-color: rgba(255, 255, 255, 0.09);
+  color: #8a8a8a;
+  transform: translateY(-1px);
 }
 
 /* Mobile adjustments for reset button */
@@ -193,7 +206,7 @@ nav a:focus-visible::after {
     gap: 0.4rem;
   }
   
-  #reset-curse, #neurogenic-burst {
+  #reset-curse {
     font-size: 0.7rem;
     padding: 0.4rem 0.8rem;
   }
@@ -213,9 +226,16 @@ strong, b {
 /* Carousel container */
 .carousel-container {
   position: relative;
-  overflow: hidden; 
+  overflow: hidden;
   height: 416px;
   margin: 0 -4.5rem;
+}
+
+/* keyboard affordance: focusing the region pauses auto-advance and
+   scopes the arrow keys to it */
+.carousel-container:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.25);
+  outline-offset: 4px;
 }
 
 .carousel-track {
@@ -224,6 +244,11 @@ strong, b {
   height: 100%;
   align-items: center;
   position: relative;
+}
+
+/* applied while snapping between clone and real slide */
+.carousel-track.no-transition {
+  transition: none !important;
 }
 
 /* Centered hero slides */
@@ -271,39 +296,6 @@ strong, b {
   transform: scale(1.05);
 }
 
-/* Elegant dot navigation */
-.carousel-nav {
-  position: absolute;
-  bottom: -2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.5rem;
-  z-index: 3;
-}
-
-.carousel-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #444;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  padding: 0;
-}
-
-.carousel-dot.active {
-  background: #888;
-  width: 20px;
-  border-radius: 3px;
-}
-
-.carousel-dot:hover {
-  background: #666;
-}
-
-
 /* Responsive adjustments */
 @media (max-width: 600px) {
   /* Global mobile adjustments */
@@ -332,7 +324,7 @@ strong, b {
   
   /* Carousel mobile optimizations */
   .carousel-section {
-    margin: 2rem 0 4rem 0; /* Reduced top margin, increased bottom for dots */
+    margin: 2rem 0 4rem 0;
     position: relative;
   }
   
@@ -377,26 +369,6 @@ strong, b {
   }
   
 
-  /* Fix navigation dots positioning on mobile */
-  .carousel-nav {
-    position: relative; /* Changed from absolute */
-    bottom: auto;
-    margin-top: 1rem;
-    left: 0;
-    transform: none;
-    justify-content: center;
-  }
-  
-  .carousel-dot {
-    width: 8px;
-    height: 8px;
-    margin: 0 4px;
-  }
-  
-  .carousel-dot.active {
-    width: 16px;
-  }
-  
   /* Button container mobile positioning */
   .glymphatic-container {
     bottom: 1rem;
@@ -436,7 +408,7 @@ strong, b {
   }
   
   /* Improve touch targets */
-  a, button {
+  nav a, .glymphatic-container button {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
@@ -470,45 +442,11 @@ strong, b {
   
 }
 
-/* Glymphatic flush button glow animation */
-@keyframes buttonGlow {
-  0% {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+/* Respect users who ask for less motion: freeze transitions/animations.
+   neural.js and script.js also check this and disable simulation/auto-advance. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
-  50% {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.3);
-    background-color: rgba(255, 255, 255, 0.15);
-  }
-  100% {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-}
-
-#reset-curse.glow {
-  animation: buttonGlow 1.5s ease-in-out;
-}
-
-/* Strong, continuous glow when particle count is high */
-@keyframes buttonGlowStrong {
-  0% {
-    box-shadow: 0 0 8px rgba(255,255,255,0.25), 0 0 0 rgba(255,255,255,0);
-    background-color: rgba(255,255,255,0.1);
-    transform: translateY(0);
-  }
-  50% {
-    box-shadow: 0 0 24px rgba(255,255,255,0.75), 0 0 48px rgba(255,255,255,0.45);
-    background-color: rgba(255,255,255,0.2);
-    transform: translateY(-2px);
-  }
-  100% {
-    box-shadow: 0 0 8px rgba(255,255,255,0.25), 0 0 0 rgba(255,255,255,0);
-    background-color: rgba(255,255,255,0.1);
-    transform: translateY(0);
-  }
-}
-
-#reset-curse.glow-urgent {
-  animation: buttonGlowStrong 1.2s ease-in-out infinite;
-  border-color: rgba(255, 255, 255, 0.35);
-  color: #cfcfcf;
 }

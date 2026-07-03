@@ -13,54 +13,59 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  
-  <title>Mark Khrapko</title>
-  
+  <meta name="theme-color" content="#1e1e1e" />
+
+  <title>Mark Khrapko — Neurotech @ Orbit</title>
+
   <!-- SEO: Meta description, canonical, OpenGraph & Twitter (non-visual) -->
   <meta name="description" content="Mark Khrapko — Neurotech @ Orbit. Still chasing the questions I had as a kid—just getting better at answering them." />
   <link rel="canonical" href="https://markkhrapko.com/" />
-  
+
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Mark Khrapko" />
   <meta property="og:description" content="Neurotech @ Orbit. Still chasing the questions I had as a kid—just getting better at answering them." />
   <meta property="og:url" content="https://markkhrapko.com/" />
-  <meta property="og:image" content="https://markkhrapko.com/images/IMG_0238%202.jpeg" />
-  
+  <meta property="og:image" content="https://markkhrapko.com/images/og-cover.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="900" />
+  <meta property="og:image:alt" content="Soldering fine wires onto an earpiece electrode assembly at a workbench" />
+
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Mark Khrapko" />
   <meta name="twitter:description" content="Neurotech @ Orbit. Still chasing the questions I had as a kid—just getting better at answering them." />
-  <meta name="twitter:image" content="https://markkhrapko.com/images/IMG_0238%202.jpeg" />
+  <meta name="twitter:image" content="https://markkhrapko.com/images/og-cover.jpg" />
+  <meta name="twitter:image:alt" content="Soldering fine wires onto an earpiece electrode assembly at a workbench" />
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
   <!-- Montserrat font -->
-  <link rel="icon" type="image/png" href="MK Favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- Preload first hero image for faster Largest Contentful Paint -->
-  <link rel="preload" as="image" href="images/IMG_0238 2.jpeg" fetchpriority="high">
-  <link 
-    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" 
+  <link rel="preload" as="image" href="images/soldering-earpiece-electrodes.webp" fetchpriority="high">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap"
     rel="stylesheet"
   />
 
   <!-- Main Styles -->
-  <link rel="stylesheet" href="styles.css?v=3.0" />
-
-  <!-- Particles.js Library -->
-  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <link rel="stylesheet" href="styles.css?v=4.0" />
 </head>
 <body>
 
-  <!-- Particles background (behind everything) -->
+  <!-- Neural field background (behind everything) -->
   <div id="particles-js"></div>
 
   <div class="container">
     <!-- HEADER -->
     <header>
-      <div class="logo">
+      <h1 class="logo">
         <span><strong>Mark Khrapko</strong></span>
-      </div>
+      </h1>
       <nav>
         <!-- Book (Amazon) -->
         <a href="https://www.amazon.com/Surely-Feynman-Adventures-Curious-Character/dp/0393316041" target="_blank" rel="noopener noreferrer" aria-label="Surely You're Joking, Mr. Feynman! (Amazon)">
@@ -74,7 +79,7 @@
         <a href="mailto:mark@orbit.engineering" aria-label="Email">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 
+            <path d="M4 4h16c1.1 0 2 .9
                      2 2v12c0 1.1-.9 2-2 2H4
                      c-1.1 0-2-.9-2-2V6
                      c0-1.1.9-2 2-2z"/>
@@ -91,94 +96,92 @@
 
       <!-- CAROUSEL -->
       <section class="carousel-section">
-        <div class="carousel-container">
+        <div class="carousel-container" role="region" aria-roledescription="carousel" aria-label="Photos" tabindex="0">
           <div class="carousel-track">
               <div class="slide">
-                <img src="images/IMG_0238 2.jpeg" alt="" fetchpriority="high" loading="eager" decoding="async"/>
+                <img src="images/soldering-earpiece-electrodes.webp" alt="Soldering fine wires onto an earpiece electrode assembly at a workbench" width="1000" height="750" fetchpriority="high" loading="eager" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_9906 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/eeg-demo-chalkboard.webp" alt="Students crowd around a live EEG demo in a chalkboard classroom" width="1000" height="1333" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/EE_setup_childhood.png" alt="" loading="lazy" decoding="async"/>
+                <img src="images/childhood-electronics-bench.webp" alt="Cluttered vintage electronics bench with vacuum tubes and glowing oscilloscopes" width="1000" height="714" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_4576 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/respirator-lab-bench.webp" alt="Working in a respirator and gloves beside a hot plate stirrer" width="1000" height="1333" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/mirroreeg.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/eeg-cap-gym.webp" alt="Wearing an EEG electrode cap in a gym mirror" width="1000" height="1333" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_0252 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/ear-electrode-headset.webp" alt="Prototype ear-worn electrode headset with ribbon cables during fitting" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_9911 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/hardware-demo-lecture-hall.webp" alt="Showing prototype hardware to students at a lecture-hall table" width="1000" height="1333" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/microneedles.jpeg" alt="" loading="lazy" decoding="async"/>
-              </div>    
-              <div class="slide">
-                <img src="images/IMG_9371 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/microneedle-sem.webp" alt="Electron micrograph of a microneedle array at 31x magnification" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_9347 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/gel-batch-stirrers.webp" alt="Foil-covered beakers stirring on a row of hot plates" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_9338 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/lab-coat-thumbs-up.webp" alt="Thumbs up in a lab coat, respirator, and purple nitrile gloves" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_9392.JPG" alt="" loading="lazy" decoding="async"/>
+                <img src="images/ultrazapinator-pcb.webp" alt="Bare green circuit board with playful Doofenshmirtz-themed silkscreen art" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_1901.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/potentiostat-cell.webp" alt="Glass electrochemical cell wired to a Gamry potentiostat" width="1000" height="1333" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_9147 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/resin-printer-farm.webp" alt="Room of resin 3D printers and wash stations" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_7593 2.JPG" alt="" loading="lazy" decoding="async"/>
+                <img src="images/microneedle-tips-closeup.webp" alt="Microscope close-up of coated microneedle tips" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_8841 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/printed-hex-lattice.webp" alt="Clear 3D-printed hexagonal lattice standing on a wooden desk" width="1000" height="1333" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_1126.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/stepper-phantom-rig.webp" alt="Motorized gantry rig positioning a probe over a tissue phantom" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_8799 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/flex-electrode-gel-macro.webp" alt="Gel-coated electrode array on a flexible circuit, up close" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_8722 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/sawing-skull-phantom.webp" alt="Sawing open a gel skull phantom clamped in a bench vise" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_8524 2.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/water-tank-ultrasound-test.webp" alt="Water tank test bench with oscilloscope and submerged phantom" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/fire logo r.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/focused-ultrasound-planning.webp" alt="Transcranial focused ultrasound planning software with MRI targeting views" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_1492.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/fire-logo-parking-lot.webp" alt="Circle-and-slash symbol burning on a parking lot at night" width="1000" height="872" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_8822.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/office-dog-goldendoodle.webp" alt="A goldendoodle sitting on the workshop's polished concrete floor" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
               <div class="slide">
-                <img src="images/IMG_0625.jpeg" alt="" loading="lazy" decoding="async"/>
+                <img src="images/skull-phantom-halves.webp" alt="Two engineers grinning over halves of a cut-open skull phantom" width="1000" height="750" loading="lazy" decoding="async"/>
+              </div>
+              <div class="slide">
+                <img src="images/resin-lattice-handheld.webp" alt="Holding a 3D-printed resin lattice in a gloved hand" width="1000" height="750" loading="lazy" decoding="async"/>
               </div>
           </div>
-          <!-- Navigation dots -->
-          <div class="carousel-nav"></div>
         </div>
       </section>
     </main>
-    
+
     <div class="glymphatic-container">
-      <button id="neurogenic-burst">excitation</button>
       <button id="reset-curse">glymphatic flush</button>
     </div>
   </div>
 
   <!-- MAIN JS -->
-  <script src="script.js?v=3.0"></script>
+  <script src="neural.js?v=4.0"></script>
+  <script src="script.js?v=4.0"></script>
 </body>
 </html>
