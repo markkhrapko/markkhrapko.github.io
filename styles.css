@@ -110,23 +110,23 @@ main p:first-child {
 /* Contact line under the carousel */
 .contact-line {
   font-size: 0.75rem;
-  color: #8a8a8a;
+  color: #545454;
   font-weight: 400;
   letter-spacing: 0.015em;
-  margin: 5rem 0 0;
+  margin: 7rem 0 0;
   text-align: center;
 }
 
 .contact-line a {
-  color: #a8a8a8;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: #636363;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   padding-bottom: 1px;
   transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .contact-line a:hover {
-  color: #d4d4d4;
-  border-color: rgba(255, 255, 255, 0.4);
+  color: #9a9a9a;
+  border-color: rgba(255, 255, 255, 0.2);
   text-decoration: none;
 }
 
