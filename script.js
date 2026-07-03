@@ -48,17 +48,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function realIndex(ti) { return (ti - 1 + numSlides) % numSlides; }
 
-  function dims() {
-    var cs = window.getComputedStyle(slides[0]);
-    return {
-      w: slides[0].offsetWidth,
-      gap: (parseFloat(cs.marginLeft) || 0) + (parseFloat(cs.marginRight) || 0)
-    };
-  }
-
   function applyPositions(instant) {
-    var d = dims();
-    var offset = (container.offsetWidth - d.w) / 2 - trackIndex * (d.w + d.gap);
+    // center the active slide by its real measured position, so slides
+    // of different widths (portrait vs landscape) all line up correctly
+    var active = allSlides[trackIndex];
+    var offset = container.offsetWidth / 2 - (active.offsetLeft + active.offsetWidth / 2);
 
     if (instant) track.classList.add('no-transition');
     track.style.transform = 'translateX(' + Math.round(offset) + 'px)';

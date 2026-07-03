@@ -257,6 +257,14 @@ strong, b {
   flex: 0 0 468px;
   height: 364px;
   margin: 0 0.5rem;
+}
+
+/* vertical photos keep their true shape: same height, natural width */
+.slide.portrait {
+  flex: 0 0 273px;
+}
+
+.slide {
   transition: all 0.9s cubic-bezier(0.3, 0, 0.1, 1); /* Match track timing */
   opacity: 0.3;
   transform: scale(0.8) translateZ(0);
@@ -349,6 +357,14 @@ strong, b {
     flex: 0 0 85%; /* Use percentage instead of viewport units for stability */
     height: 180px;
     margin: 0 2.5%;
+  }
+
+  /* vertical photos: true shape at mobile height */
+  .slide.portrait {
+    flex: 0 0 135px;
+  }
+
+  .slide {
     scroll-snap-align: none;
     /* Force consistent rendering */
     -webkit-transform: translateZ(0);
